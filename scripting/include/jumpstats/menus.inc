@@ -1,4 +1,4 @@
-public ljsmenu(id) {
+public cmdLjsmenu(id) {
 	if (!is_user_connected(id))
 		return PLUGIN_HANDLED;
 
@@ -41,7 +41,6 @@ public ljsmenu(id) {
 		menu_additem(hMenu, "JumpOff - \dOff", "7", 0);
 	}
 
-	menu_setprop(hMenu, MPROP_PERPAGE);
 	menu_display(id, hMenu);
 
 	return PLUGIN_HANDLED;
@@ -59,27 +58,27 @@ public ljsmenuHandler(id, hMenu, item) {
 	switch (iKey) {
 		case 1: {
 			cmdShowSpeed(id);
-			ljsmenu(id);
+			cmdLjsmenu(id);
 		}
 		case 2: {
 			cmdShowPre(id);
-			ljsmenu(id);
+			cmdLjsmenu(id);
 		}
 		case 3: {
 			cmdShowStats(id);
-			ljsmenu(id);
+			cmdLjsmenu(id);
 		}
 		case 4: {
 			cmdShowChatInfo(id);
-			ljsmenu(id);
+			cmdLjsmenu(id);
 		}
 		case 5: {
 			cmdShowStrafe(id);
-			ljsmenu(id);
+			cmdLjsmenu(id);
 		}
 		case 6: {
 			cmdShowJof(id);
-			ljsmenu(id);
+			cmdLjsmenu(id);
 		}
 	}
 

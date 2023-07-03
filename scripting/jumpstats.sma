@@ -1,7 +1,7 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.1.0", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.1.1", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -207,7 +207,8 @@ public rgPlayerPostThink(id) {
 		return HC_CONTINUE;
 	}
 
-	show_prespeed(id);
+	if (g_eOnOff[id][of_bSpeed])
+		show_prespeed(id);
 	
 	if (!g_eJumpType[id]) {
 		return HC_CONTINUE;
