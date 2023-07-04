@@ -3,8 +3,8 @@ public in_ladder(id, bool:isJump) {
 		g_eJumpType[id] = IS_JUMP_INLADDER;
 	} else {
 		g_eWhichJump[id] = jt_LadderJump;
-		g_flJumpOffOrigin[id] = g_flPrevOrigin[id];
-		g_flJumpOffOrigin[id][2] = g_flPrevOrigin[id][2];
+		g_flFirstJump[id] = g_flPrevOrigin[id];
+		g_flFirstJump[id][2] = g_flPrevOrigin[id][2];
 		g_flJumpOffTime[id] = get_gametime();
 		g_iStrOldButtons[id] = 0;
 		g_flTempSpeed[id] = 0.0;

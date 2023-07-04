@@ -1,7 +1,7 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.1.2", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.1.3", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -54,7 +54,7 @@ public rgPlayerPreThink(id) {
 		if (!isOldGound) {
 			g_flPreHorSpeed[id] = g_flHorSpeed[id];
 			if (g_eWhichJump[id] != jt_Not) {
-				ready_jumps(id, g_flPrevOrigin[id]);
+				ready_jumps(id, g_flOrigin[id]);
 			}
 		}
 
@@ -84,8 +84,7 @@ public rgPlayerPreThink(id) {
 			g_eWhichJump[id] = jt_Not;
 			g_iDucks[id] = 0;
 			g_iJumps[id] = 0;
-			g_flDuckFirstZ[id] = 0.0;
-			g_flJumpFirstZ[id] = 0.0;
+			g_flDuckFirstZ[id] = 0.0; 
 
 			g_isTouched[id] = false;
 
@@ -116,7 +115,7 @@ public rgPlayerPreThink(id) {
 			}
 		}
 	} else {
-		if (g_eJumpType[id]) {
+		if (g_eWhichJump[id]) {
 			g_eJumpstats[id][js_iFrames]++;
 
 			if (g_flHorSpeed[id] > g_eJumpstats[id][js_flEndSpeed]) {
@@ -134,17 +133,13 @@ public rgPlayerPreThink(id) {
 			}
 			g_flTempSpeed[id] = g_flHorSpeed[id];
 
-			detect_hj(id, g_flOrigin[id], g_flJumpOffOrigin[id][2]);
+			detect_hj(id, g_flOrigin[id], g_flFirstJump[id][2]);
 		}
 
 		if (g_eWhichJump[id] != jt_Not && !g_eFailJump[id]) {
-			if ((g_flOrigin[id][2] - g_flJumpOffOrigin[id][2] < 0)) {
+			if ((g_bInDuck[id] ? (g_flOrigin[id][2] + 18.0) : g_flOrigin[id][2]) - g_flFirstJump[id][2] < 0) {
 				g_eFailJump[id] = fl_fail;
-				ready_jumps(id, g_flOrigin[3]);
-			} else if ((g_bInDuck[id] ? (g_flPrevOrigin[id][2] + 18) : g_flPrevOrigin[id][2]) >= g_flJumpOffOrigin[id][2]) {
-				g_flFailedOrigin[id] = g_flPrevOrigin[id];
-				g_bFailedInDuck[id] = g_bInDuck[id];
-				g_flFailedVelocity[id] = g_flVelocity[id];
+				ready_jumps(id, g_flPrevOrigin[id]);
 			}
 		}
 
@@ -161,11 +156,12 @@ public rgPlayerPreThink(id) {
 				if (isJump) {
 					in_bhop_js(id, iFog);
 
-					calc_jof_block(id, g_flJumpOffOrigin[id]);
+					calc_jof_block(id, g_flFirstJump[id]);
 				}
 			}
 			if (!isDuck && !isJump && g_flVelocity[id][2] <= -4.0) {
 				if (iFog > 10) {
+					g_iVerInfo[id] = IS_MIDDLE;
 					g_isFalling[id] = true;
 					// ФАЛЛ
 				}

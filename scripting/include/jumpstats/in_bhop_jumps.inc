@@ -1,6 +1,6 @@
 public in_bhop_js(id, iFog) {
 	g_iStrafes[id] = 0;
-	g_flJumpOffOrigin[id] = g_flPrevOrigin[id];
+	g_flFirstJump[id] = g_flPrevOrigin[id];
 	g_flJumpOffTime[id] = get_gametime();
 	g_flTempSpeed[id] = 0.0;
 
@@ -19,16 +19,13 @@ public in_bhop_js(id, iFog) {
 		g_iJumps[id]++;
 		g_eJumpData[id][g_iJumps[id]][JUMP_PRE] = g_flPrevHorSpeed[id];
 		g_eJumpData[id][g_iJumps[id]][JUMP_FOG] = iFog;
-
-		g_flJumpFirstZ[id] = g_bPrevInDuck[id] ? g_flPrevOrigin[id][2] + 18.0 : g_flPrevOrigin[id][2];
-
+		
 		if (g_bPrevInDuck[id]) {
 			g_eJumpType[id] = IS_DUCKBHOP;
-			g_flJumpOffOrigin[id][2] = g_flJumpOffOrigin[id][2] + 18.0;
+			g_flFirstJump[id][2] = g_flFirstJump[id][2] + 18.0;
 		} else {
 			g_eJumpType[id] = IS_JUMP;
 			g_eWhichJump[id] = jt_LongJump;
-			g_flJumpOffOrigin[id][2] = g_flJumpOffOrigin[id][2];
 			g_eJumpstats[id][js_flEndSpeed] = g_flHorSpeed[id];
 		}
 
@@ -45,9 +42,9 @@ public in_bhop_js(id, iFog) {
 			if (g_iVerInfo[id] == IS_MIDDLE) {
 				new Float:flJumpZ = g_bPrevInDuck[id] ? g_flPrevOrigin[id][2] + 18.0 : g_flPrevOrigin[id][2]; // Селать прев
 
-				if (flJumpZ - g_flDuckFirstZ[id] < -4.0) {
+				if (flJumpZ - g_flFirstJump[id][2] < -4.0) {
 					g_iVerInfo[id] = IS_DROPPED;
-				} else if (flJumpZ - g_flDuckFirstZ[id] > 4.0) {
+				} else if (flJumpZ - g_flFirstJump[id][2] > 4.0) {
 					g_iVerInfo[id] = IS_UPPED;
 				}
 			}
@@ -100,9 +97,9 @@ public in_bhop_js(id, iFog) {
 					if (g_iVerInfo[id] == IS_MIDDLE) {
 						new Float:flJumpZ = g_bInDuck[id] ? g_flPrevOrigin[id][2] + 18.0 : g_flPrevOrigin[id][2];
 
-						if (flJumpZ - g_flJumpFirstZ[id] < -4.0) {
+						if (flJumpZ - g_flPrevOrigin[id][2] < -4.0) {
 							g_iVerInfo[id] = IS_DROPPED;
-						} else if (flJumpZ - g_flJumpFirstZ[id] > 4.0) {
+						} else if (flJumpZ - g_flPrevOrigin[id][2] > 4.0) {
 							g_iVerInfo[id] = IS_UPPED;
 						}
 					}
@@ -125,7 +122,7 @@ public in_bhop_js(id, iFog) {
 		}
 		g_eJumpstats[id][js_flEndSpeed] = g_flHorSpeed[id];
 
-		g_flJumpOffOrigin[id][2] = g_bPrevInDuck[id] ? g_flJumpOffOrigin[id][2] + 18.0 : g_flJumpOffOrigin[id][2];
+		g_flFirstJump[id][2] = g_bPrevInDuck[id] ? g_flFirstJump[id][2] + 18.0 : g_flFirstJump[id][2];
 		// БХОП
 	}
 }

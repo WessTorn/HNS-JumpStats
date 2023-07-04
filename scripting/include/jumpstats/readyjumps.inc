@@ -48,30 +48,18 @@ new g_iStrAllEff[MAX_PLAYERS + 1];
 new Float:g_flStrFullTime[MAX_PLAYERS + 1];
 new Float:g_flStrGain[MAX_PLAYERS + 1];
 
-public ready_jumps(id, Float:flOrigin[3]) {
+public ready_jumps(id, Float:flFirstJump[3]) {
 	if (g_eWhichJump[id] == jt_LongJump && g_iDetectHJ[id] == 1) {
 		g_eWhichJump[id] = jt_HighJump;
 
 	}
 
-	new bool:bFail;
-	if (g_eFailJump[id] == fl_fail) {
-		bFail = true;
-		flOrigin = g_flFailedOrigin[id];
-	} else {
-		bFail = false;
-	}
+	new Float:flOrigin[3];
+	flOrigin = flFirstJump;
 
 	flOrigin[2] = g_bInDuck[id] ? (flOrigin[2] += 18.0) : flOrigin[2];
-
-	static Float:flDistance1;
-	flDistance1 = get_distance_f(g_flJumpOffOrigin[id], flOrigin) + 32.0;
 	
-	if (bFail == true) {
-		g_eJumpstats[id][js_flDistance] = GetFailedDistance(32.0, g_bFailedInDuck[id], g_pCvar[c_iGravity], g_flJumpOffOrigin[id], g_flVelocity[id], g_flFailedOrigin[id], g_flFailedVelocity[id]);
-	} else {
-		g_eJumpstats[id][js_flDistance] = flDistance1;
-	}
+	g_eJumpstats[id][js_flDistance] = get_distance_f(g_flFirstJump[id], flOrigin) + 32.0;
 
 	if (g_eWhichJump[id] != jt_LadderJump && g_eJumpstats[id][js_flDistance] > 64.0) {
 		g_eJumpstats[id][js_flLanding] = g_eJumpstats[id][js_flDistance] - (g_eJumpstats[id][js_iJumpBlock] + g_eJumpstats[id][js_flJof]);

@@ -60,7 +60,6 @@ enum PLAYER_VER {
 
 new PLAYER_VER:g_iVerInfo[MAX_PLAYERS + 1];
 new Float:g_flDuckFirstZ[MAX_PLAYERS + 1];
-new Float:g_flJumpFirstZ[MAX_PLAYERS + 1];
 
 enum DUCK_DATA {
 	IS_DUCK_NOT = 0,
@@ -119,12 +118,10 @@ new g_iMoveType[MAX_PLAYERS + 1];
 
 new Float:g_flOrigin[MAX_PLAYERS + 1][3];
 new Float:g_flPrevOrigin[MAX_PLAYERS + 1][3];
-new Float:g_flFailedOrigin[MAX_PLAYERS + 1][3];
-new Float:g_flJumpOffOrigin[MAX_PLAYERS + 1][3];
+new Float:g_flFirstJump[MAX_PLAYERS + 1][3];
 
 new Float:g_flVelocity[MAX_PLAYERS + 1][3];
 new Float:g_flPrevVelocity[MAX_PLAYERS + 1][3];
-new Float:g_flFailedVelocity[MAX_PLAYERS + 1][3];
 
 new Float:g_flHorSpeed[MAX_PLAYERS + 1];
 new Float:g_flPrevHorSpeed[MAX_PLAYERS + 1];
@@ -134,7 +131,6 @@ new Float:g_flMaxSpeed[MAX_PLAYERS + 1]
 
 new bool:g_bInDuck[MAX_PLAYERS + 1];
 new bool:g_bPrevInDuck[MAX_PLAYERS + 1];
-new bool:g_bFailedInDuck[MAX_PLAYERS + 1];
 
 new bool:g_bLadder[MAX_PLAYERS + 1];
 new bool:g_bPrevLadder[MAX_PLAYERS + 1];

@@ -127,25 +127,6 @@ public get_colorchat_by_distance(JumpType:iJumpType, Float:mSpeed) {
 }
 
 
-stock Float:GetFailedDistance(Float:ExDist, bool:ducking, Float:gravity, Float:g_flJumpOffOrigin[3], Float:current_velocity[3], Float:g_flFailedOrigin[3], Float:g_flFailedVelocity[3]) {
-	static Float:airtime, Float:land_origin[3], Float:distance;
-	
-	if(ducking)
-		g_flJumpOffOrigin[2] -= 18.0;
-	
-	airtime = ((floatsqroot((g_flFailedVelocity[2] * g_flFailedVelocity[2]) - (2.0 * -gravity * (g_flFailedOrigin[2] - g_flJumpOffOrigin[2])))*-1) - g_flFailedVelocity[2]) / -gravity;
-	
-	land_origin[0] = floatabs(g_flFailedOrigin[0] - g_flJumpOffOrigin[0]) + floatabs(current_velocity[0] * airtime);
-	land_origin[1] = floatabs(g_flFailedOrigin[1] - g_flJumpOffOrigin[1]) + floatabs(current_velocity[1] * airtime);
-	
-	distance = vector_length(land_origin) + ExDist;
-	
-	if(ducking)
-		g_flJumpOffOrigin[2] += 18.0;
-	
-	return distance;
-}
-
 enum TypeInfo {
 	all = 0, one, multi
 }
@@ -169,9 +150,10 @@ stock is_user_spectating_player(spectator, player) {
         return 0;
 }
 
-public calc_jof_block(id, Float:flOrigin[3]) {
+public calc_jof_block(id, Float:flJumpOff[3]) {
+	new Float:flOrigin[3];
 	new Float:tmpblock[3], tmpjblock[3], Float:tmpOrigin[3], Float:tmpOrigin2[3];
-
+	flOrigin = flJumpOff;
 	flOrigin[2] = flOrigin[2] - 36.1;
 
 
