@@ -66,57 +66,12 @@ public ready_jumps(id, Float:flOrigin[3]) {
 
 	static Float:flDistance1;
 	flDistance1 = get_distance_f(g_flJumpOffOrigin[id], flOrigin) + 32.0;
-
-	flOrigin[2] = g_bInDuck[id] ? (flOrigin[2] -= 18.0) : flOrigin[2];
-
-	if (g_flFrameVelocity[id][1][0] < 0.0) g_flFrameVelocity[id][1][0] *= -1.0;
-	if (g_flFrameVelocity[id][1][1] < 0.0) g_flFrameVelocity[id][1][1] *= -1.0;
-
-	static Float:flLandOrigin[3];
-
-	flLandOrigin[2] = g_flFrameVelocity[id][0][2] * g_flFrameVelocity[id][0][2] + (2 * g_pCvar[c_iGravity] * (g_flFrameOrigin[id][0][2] - flOrigin[2]));
-
-	static Float:rDistance[3];
-
-	rDistance[0] = (floatsqroot(flLandOrigin[2]) * -1) - g_flFrameVelocity[id][1][2];
-	rDistance[1] = g_pCvar[c_iGravity] * -1;
-
-	static Float:frame2time;
-
-	frame2time = floatdiv(rDistance[0], rDistance[1]);
-	if (g_flFrameVelocity[id][1][0] < 0)
-		g_flFrameVelocity[id][1][0] = g_flFrameVelocity[id][1][0] * -1;
-	rDistance[0] = frame2time * g_flFrameVelocity[id][1][0];
-
-	if (g_flFrameVelocity[id][1][1] < 0)
-		g_flFrameVelocity[id][1][1] = g_flFrameVelocity[id][1][1] * -1;
-	rDistance[1] = frame2time * g_flFrameVelocity[id][1][1];
-
-	if (g_flFrameVelocity[id][1][2] < 0)
-		g_flFrameVelocity[id][1][2] = g_flFrameVelocity[id][1][2] * -1;
-	rDistance[2] = frame2time * g_flFrameVelocity[id][1][2];
-
-	if (g_flFrameOrigin[id][1][0] < flOrigin[0])
-		flLandOrigin[0] = g_flFrameOrigin[id][1][0] + rDistance[0];
-	else
-		flLandOrigin[0] = g_flFrameOrigin[id][1][0] - rDistance[0];
-	if (g_flFrameOrigin[id][1][1] < flOrigin[1])
-		flLandOrigin[1] = g_flFrameOrigin[id][1][1] + rDistance[1];
-	else
-		flLandOrigin[1] = g_flFrameOrigin[id][1][1] - rDistance[1];
-
-	flOrigin[2] = g_bInDuck[id] ? (flOrigin[2] += 18.0) : flOrigin[2];
-
-	flLandOrigin[2] = flOrigin[2];
-
-	frame2time += (g_flLandTime[id] - g_flJumpOffTime[id]);
-
-	static Float:flDistance2;
-	flDistance2 = get_distance_f(g_flJumpOffOrigin[id], flLandOrigin) + 32.0;
-
+	
 	if (bFail == true) {
 		g_eJumpstats[id][js_flDistance] = GetFailedDistance(32.0, g_bFailedInDuck[id], g_pCvar[c_iGravity], g_flJumpOffOrigin[id], g_flVelocity[id], g_flFailedOrigin[id], g_flFailedVelocity[id]);
-	} else g_eJumpstats[id][js_flDistance] = flDistance1 > flDistance2 ? flDistance2 : flDistance1;
+	} else {
+		g_eJumpstats[id][js_flDistance] = flDistance1;
+	}
 
 	if (g_eWhichJump[id] != jt_LadderJump && g_eJumpstats[id][js_flDistance] > 64.0) {
 		g_eJumpstats[id][js_flLanding] = g_eJumpstats[id][js_flDistance] - (g_eJumpstats[id][js_iJumpBlock] + g_eJumpstats[id][js_flJof]);

@@ -24,11 +24,11 @@ public in_bhop_js(id, iFog) {
 
 		if (g_bPrevInDuck[id]) {
 			g_eJumpType[id] = IS_DUCKBHOP;
-			g_flJumpOffOrigin[id][2] = g_flPrevOrigin[id][2] + 18.0;
+			g_flJumpOffOrigin[id][2] = g_flJumpOffOrigin[id][2] + 18.0;
 		} else {
 			g_eJumpType[id] = IS_JUMP;
 			g_eWhichJump[id] = jt_LongJump;
-			g_flJumpOffOrigin[id][2] = g_flPrevOrigin[id][2];
+			g_flJumpOffOrigin[id][2] = g_flJumpOffOrigin[id][2];
 			g_eJumpstats[id][js_flEndSpeed] = g_flHorSpeed[id];
 		}
 
@@ -125,7 +125,7 @@ public in_bhop_js(id, iFog) {
 		}
 		g_eJumpstats[id][js_flEndSpeed] = g_flHorSpeed[id];
 
-		g_flJumpOffOrigin[id][2] = g_bPrevInDuck[id] ? g_flPrevOrigin[id][2] + 18.0 : g_flPrevOrigin[id][2];
+		g_flJumpOffOrigin[id][2] = g_bPrevInDuck[id] ? g_flJumpOffOrigin[id][2] + 18.0 : g_flJumpOffOrigin[id][2];
 		// БХОП
 	}
 }

@@ -121,12 +121,10 @@ new Float:g_flOrigin[MAX_PLAYERS + 1][3];
 new Float:g_flPrevOrigin[MAX_PLAYERS + 1][3];
 new Float:g_flFailedOrigin[MAX_PLAYERS + 1][3];
 new Float:g_flJumpOffOrigin[MAX_PLAYERS + 1][3];
-new Float:g_flFrameOrigin[MAX_PLAYERS + 1][2][3]; // Переделать
 
 new Float:g_flVelocity[MAX_PLAYERS + 1][3];
 new Float:g_flPrevVelocity[MAX_PLAYERS + 1][3];
 new Float:g_flFailedVelocity[MAX_PLAYERS + 1][3];
-new Float:g_flFrameVelocity[MAX_PLAYERS + 1][2][3];
 
 new Float:g_flHorSpeed[MAX_PLAYERS + 1];
 new Float:g_flPrevHorSpeed[MAX_PLAYERS + 1];
