@@ -1,7 +1,7 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.1.1", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.1.2", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -53,11 +53,8 @@ public rgPlayerPreThink(id) {
 
 		if (!isOldGound) {
 			g_flPreHorSpeed[id] = g_flHorSpeed[id];
-			if (g_eJumpType[id]) {
-				g_flFrameVelocity[id][1] = g_flVelocity[id];
-			}
 			if (g_eWhichJump[id] != jt_Not) {
-				ready_jumps(id, g_flOrigin[id]);
+				ready_jumps(id, g_flPrevOrigin[id]);
 			}
 		}
 
@@ -171,16 +168,6 @@ public rgPlayerPreThink(id) {
 				if (iFog > 10) {
 					g_isFalling[id] = true;
 					// ФАЛЛ
-				}
-			}
-		}
-
-		if (g_eJumpType[id]) {
-			for(new i = 0; i < 2; i++ ) {
-				if((i == 1) || (g_flFrameOrigin[id][i][0] == 0 && g_flFrameOrigin[id][i][1] == 0 && g_flFrameOrigin[id][i][2] == 0 && g_flFrameVelocity[id][i][0] == 0	&& g_flFrameVelocity[id][i][1] == 0 && g_flFrameVelocity[id][i][2] == 0 )) {
-					g_flFrameOrigin[id][i] = g_flOrigin[0];
-					g_flFrameVelocity[id][i] = g_flVelocity[0];
-					i = 2;
 				}
 			}
 		}
