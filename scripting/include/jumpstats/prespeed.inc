@@ -5,9 +5,10 @@ enum _:TYPE_PRE {
 	pre_bid = 3,
 	pre_duckbhop = 4,
 	pre_ladder = 5,
-	pre_jump = 6,
-	pre_duck = 7,
-	pre_fall = 8
+	pre_ladder_jump = 6,
+	pre_jump = 7,
+	pre_duck = 8,
+	pre_fall = 9
 };
 
 new g_szPreType[][] = {
@@ -17,9 +18,10 @@ new g_szPreType[][] = {
 	"bid",
 	"duckbhop",
 	"ladder",
+	"ladder jump",
 	"jump",
 	"duck",
-	"fall"
+	"fall",
 };
 
 
@@ -76,6 +78,9 @@ public show_prespeed(id) {
 		switch (iType) {
 			case 0..4: {
 				ShowSyncHudMsg(id, g_hudPreSpeed, "%s^n%.0f u/s^n%s %d fog:^n%.2f^n%.2f", g_isJof[id] ? szJof : "", g_flHorSpeed[id], g_szPreType[iType], g_ePreData[id][sp_iFog], g_ePreData[id][sp_flPre], g_ePreData[id][sp_flPost]);
+			}
+			case 5, 6: {
+				ShowSyncHudMsg(id, g_hudPreSpeed, "%s^n%.0f u/s^n%s:^n%.2f", g_isJof[id] ? szJof : "", g_flHorSpeed[id], g_szPreType[iType], g_ePreData[id][sp_flPre]);
 			}
 			default: {
 				ShowSyncHudMsg(id, g_hudPreSpeed, "%s^n%.0f u/s^n%s pre:^n%.2f", g_isJof[id] ? szJof : "", g_flHorSpeed[id], g_szPreType[iType], g_ePreData[id][sp_flPre]);

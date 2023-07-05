@@ -17,7 +17,7 @@ public in_bhop_js(id, iFog) {
 	{
 		g_iJumps[id] = 0;
 		g_iJumps[id]++;
-		g_eJumpData[id][g_iJumps[id]][JUMP_PRE] = g_flPrevHorSpeed[id];
+		g_eJumpData[id][g_iJumps[id]][JUMP_PRE] = g_flHorSpeed[id];
 		g_eJumpData[id][g_iJumps[id]][JUMP_FOG] = iFog;
 		g_iVerInfo[id] = IS_MIDDLE;
 		
@@ -38,7 +38,7 @@ public in_bhop_js(id, iFog) {
 	else
 	{
 		g_iJumps[id]++;
-		g_eJumpData[id][g_iJumps[id]][JUMP_PRE] = g_flPrevHorSpeed[id];
+		g_eJumpData[id][g_iJumps[id]][JUMP_PRE] = g_flHorSpeed[id];
 		g_eJumpData[id][g_iJumps[id]][JUMP_FOG] = iFog;
 
 		g_flFirstJump[id][2] = g_bPrevInDuck[id] ? g_flFirstJump[id][2] + 18.0 : g_flFirstJump[id][2];
@@ -74,20 +74,11 @@ public in_bhop_js(id, iFog) {
 				show_pre(id, pre_sbj, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
 			}
 		} else {
-			if (g_isFalling[id]) {
-				g_eWhichJump[id] = jt_WeirdJump;
-				g_eJumpType[id] = IS_JUMP_INFALL;
-				show_pre(id, pre_fall, g_flHorSpeed[id]);
-			}
-
 			if (g_eJumpType[id] != IS_JUMP_NOT) {
 				if (g_iJumps[id] <= 2) {
 					if (g_eJumpType[id] == IS_DUCKBHOP) {
 						g_eWhichJump[id] = jt_DuckBhopJump;
 						show_pre(id, pre_duckbhop, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
-					} else if (g_eJumpType[id] == IS_JUMP_INLADDER) {
-						g_eWhichJump[id] = jt_LadderBhopJump;
-						show_pre(id, pre_bhop, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
 					} else if (g_bInDuck[id]) {
 						g_eWhichJump[id] = jt_BhopInDuck
 						show_pre(id, pre_bid, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
@@ -99,7 +90,7 @@ public in_bhop_js(id, iFog) {
 						show_pre(id, pre_bhop, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
 					}
 
-					if (g_iVerInfo[id] == IS_MIDDLE) {
+					if (g_iVerInfo[id] == IS_MIDDLE && !g_isLadderBhop[id] && !g_isFalling[id]) {
 						new Float:flJumpZ = g_bPrevInDuck[id] ? g_flPrevOrigin[id][2] + 18.0 : g_flPrevOrigin[id][2];
 
 						if (flJumpZ - g_flJumpFirstZ[id] < -4.0) {
@@ -107,14 +98,15 @@ public in_bhop_js(id, iFog) {
 						} else if (flJumpZ - g_flJumpFirstZ[id] > 4.0) {
 							g_iVerInfo[id] = IS_UPPED;
 						}
+					} else if (g_isLadderBhop[id]) {
+						g_ePreStats[id][ptLadderBhop] = true;
+						g_isLadderBhop[id] = false;
 					}
 				} else {
 					g_eWhichJump[id] = jt_Not;
 
 					if (g_eJumpType[id] == IS_DUCKBHOP) {
 						show_pre(id, pre_duckbhop, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
-					} else if (g_eJumpType[id] == IS_JUMP_INLADDER) {
-						show_pre(id, pre_bhop, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
 					} else if (g_bInDuck[id]) {
 						show_pre(id, pre_bid, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
 					} else if (g_eJumpType[id] == IS_SBJ) {

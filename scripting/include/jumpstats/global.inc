@@ -12,11 +12,8 @@ enum JumpType {
 	jt_DuckBhopJump = 8,
 	jt_WeirdJump = 9,
 	jt_LadderJump = 10,
-	jt_LadderBhopJump = 11,
-	jt_RealLadderBhopJump = 12,
-	jt_BhopInDuck = 13,
-	jt_Bhop = 14,
-	jt_Not = 15
+	jt_BhopInDuck = 11,
+	jt_Not = 12
 };
 
 
@@ -32,6 +29,14 @@ enum _:JUMPSTATS {
 };
 
 new g_eJumpstats[MAX_PLAYERS + 1][JUMPSTATS];
+
+enum _:PRESTATS {
+	ptSideWays,
+	ptBackWards,
+	ptLadderBhop
+}
+
+new bool:g_ePreStats[MAX_PLAYERS + 1][PRESTATS];
 
 enum _:buttons_info {
 	bi_not = 0, bi_W, bi_A, bi_S, bi_D
@@ -84,7 +89,7 @@ enum JUMP_DATA {
 	IS_JUMP,
 	IS_JUMP_INFALL,
 	IS_JUMP_INDUCK,
-	IS_JUMP_INLADDER,
+	IS_LADDER_BHOP,
 	IS_BHJ,
 	IS_DUCKBHOP,
 	IS_SBJ
@@ -130,9 +135,9 @@ new bool:g_bInDuck[MAX_PLAYERS + 1];
 new bool:g_bPrevInDuck[MAX_PLAYERS + 1];
 
 new bool:g_bPrevLadder[MAX_PLAYERS + 1];
+new bool:g_isLadderBhop[MAX_PLAYERS + 1];
 
 new bool:g_isFalling[MAX_PLAYERS + 1];
-new bool:g_isBackWards[MAX_PLAYERS + 1];
 new bool:g_isTouched[MAX_PLAYERS + 1];
 
 new bool:g_bCheckFrames[MAX_PLAYERS + 1];

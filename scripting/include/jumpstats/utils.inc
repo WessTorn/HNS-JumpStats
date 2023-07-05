@@ -79,7 +79,7 @@ public get_colorchat_by_distance(JumpType:iJumpType, Float:mSpeed) {
 			aDistance[pro] = 250 + aircj;
 			aDistance[good] = 245 + aircj;
 		}
-		case jt_WeirdJump, jt_LadderBhopJump: {
+		case jt_WeirdJump: { // ладдер бхоп
 			aDistance[god] = 272;
 			aDistance[leet] = 270;
 			aDistance[holy] = 265;

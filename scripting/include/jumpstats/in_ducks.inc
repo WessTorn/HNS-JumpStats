@@ -16,7 +16,7 @@ public in_ducks(id, iFog) {
 			g_eDuckType[id] = IS_DUCK;
 		}
 
-		show_pre(id, pre_duck, g_flPrevHorSpeed[id]);
+		show_pre(id, pre_duck, g_flHorSpeed[id]);
 	} else {
 		g_iDucks[id]++;
 		g_eDuckData[id][g_iDucks[id]][DUCK_PRE] = g_flPrevHorSpeed[id];

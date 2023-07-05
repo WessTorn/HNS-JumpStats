@@ -1,7 +1,7 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.2.0", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.2.1", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -36,7 +36,10 @@ public rgPM_Move(id) {
 
 	new bool:isLadder = get_pmove(pm_movetype) == MOVETYPE_FLY ? true : false;
 
-	new bool:isGound = get_pmove(pm_onground) ? false : true || isLadder;
+	new bool:isGound = get_pmove(pm_onground) == -1 ? false : true;
+	isGound = isGound || isLadder;
+
+	g_isOldGround[id] = g_isOldGround[id] || g_bPrevLadder[id];
 
 	for (new i = 1; i < MaxClients; i++) {
 		g_isUserSpec[i] = is_user_spectating_player(i, id);
@@ -65,12 +68,12 @@ public rgPM_Move(id) {
 			}
 		}
 
-		if (!g_eJumpType[id] && g_iButtons[id] & IN_BACK && g_isBackWards[id] == false) {
-			g_isBackWards[id] = true;
-		} else if (!g_eJumpType[id] && g_iButtons[id] & IN_FORWARD && g_isBackWards[id]) {
-			g_isBackWards[id] = false;
+		if (!g_eJumpType[id] && g_iButtons[id] & IN_BACK && !g_ePreStats[id][ptBackWards]) {
+			g_ePreStats[id][ptBackWards] = true;
+		} else if (!g_eJumpType[id] && g_iButtons[id] & IN_FORWARD && g_ePreStats[id][ptBackWards]) {
+			g_ePreStats[id][ptBackWards] = false;
 		} else if (g_eWhichJump[id] == jt_BhopJump || g_eWhichJump[id] == jt_StandUpBhopJump) {
-			g_isBackWards[id] = false;
+			g_ePreStats[id][ptBackWards] = false;
 		}
 
 		if (iFog > 10) {
@@ -86,13 +89,14 @@ public rgPM_Move(id) {
 
 			g_isTouched[id] = false;
 
-			g_isBackWards[id] = false;
+			g_ePreStats[id][ptBackWards] = false;
 			g_eFailJump[id] = fj_good;
 			g_iDetectHJ[id] = 0;
 			g_eJumpstats[id][js_iJumpBlock] = 1000;
 			g_eJumpstats[id][js_iFrames] = 0;
 			g_iStrafes[id] = 0;
 			g_eJumpstats[id][js_flJof] = 0.0;
+			g_isLadderBhop[id] = false;
 
 			g_bCheckFrames[id] = false;
 			for (new i = 0; i < NSTRAFES; i++) {
@@ -125,8 +129,11 @@ public rgPM_Move(id) {
 			}
 			if (!isDuck && !isJump && g_flVelocity[id][2] <= -4.0) {
 				if (iFog > 10) {
-					g_iVerInfo[id] = IS_MIDDLE;
 					g_isFalling[id] = true;
+					g_eJumpType[id] = IS_JUMP;
+					g_iJumps[id]++;
+					g_eJumpData[id][g_iJumps[id]][JUMP_PRE] = g_flHorSpeed[id];
+					show_pre(id, pre_fall, g_flHorSpeed[id]);
 					// ФАЛЛ
 				}
 			}
@@ -271,7 +278,7 @@ public client_connect(id) {
 	g_eOnOff[id][of_bPre] = true;
 
 	g_bCheckFrames[id] = false;
-	g_isBackWards[id] = false;
+	g_ePreStats[id][ptBackWards] = false;
 	g_isTouched[id] = false;
 	g_eOnOff[id][of_bStats] = true;
 }
