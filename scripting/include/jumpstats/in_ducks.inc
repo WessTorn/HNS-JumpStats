@@ -36,7 +36,6 @@ public in_ducks(id, iFog) {
 			g_eDuckType[id] = IS_DD;
 		}
 
-
 		show_pre(id, pre_dd, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
 	}
 }

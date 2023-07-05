@@ -60,6 +60,7 @@ enum PLAYER_VER {
 
 new PLAYER_VER:g_iVerInfo[MAX_PLAYERS + 1];
 new Float:g_flDuckFirstZ[MAX_PLAYERS + 1];
+new Float:g_flJumpFirstZ[MAX_PLAYERS + 1];
 
 enum DUCK_DATA {
 	IS_DUCK_NOT = 0,
@@ -107,14 +108,10 @@ enum FAIL_JUMP {
 
 new FAIL_JUMP:g_eFailJump[MAX_PLAYERS + 1];
 
-new g_iFlags[MAX_PLAYERS + 1];
-new g_iOldFlags[MAX_PLAYERS + 1];
+new bool:g_isOldGround[MAX_PLAYERS + 1];
 
 new g_iButtons[MAX_PLAYERS + 1];
 new g_iPrevButtons[MAX_PLAYERS + 1];
-new g_iOldButtons[MAX_PLAYERS + 1];
-
-new g_iMoveType[MAX_PLAYERS + 1];
 
 new Float:g_flOrigin[MAX_PLAYERS + 1][3];
 new Float:g_flPrevOrigin[MAX_PLAYERS + 1][3];
@@ -132,13 +129,11 @@ new Float:g_flMaxSpeed[MAX_PLAYERS + 1]
 new bool:g_bInDuck[MAX_PLAYERS + 1];
 new bool:g_bPrevInDuck[MAX_PLAYERS + 1];
 
-new bool:g_bLadder[MAX_PLAYERS + 1];
 new bool:g_bPrevLadder[MAX_PLAYERS + 1];
 
 new bool:g_isFalling[MAX_PLAYERS + 1];
 new bool:g_isBackWards[MAX_PLAYERS + 1];
 new bool:g_isTouched[MAX_PLAYERS + 1];
-new bool:g_isTrigger[MAX_PLAYERS + 1];
 
 new bool:g_bCheckFrames[MAX_PLAYERS + 1];
 

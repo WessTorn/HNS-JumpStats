@@ -1,57 +1,54 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.1.3", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.2.0", "WessTorn");
 
 	init_cvars();
 	init_cmds();
 
 	register_forward(FM_Touch, "fwdTouch", 1);
 
-	RegisterHam(Ham_Touch, "player", "HamTouch");
-	
-	RegisterHookChain(RG_CBasePlayer_PostThink,	"rgPlayerPostThink", false);
-	RegisterHookChain(RG_CBasePlayer_PreThink,	"rgPlayerPreThink", false);
+	RegisterHookChain(RG_PM_Move, "rgPM_Move");
+	RegisterHookChain(RG_PM_AirMove, "rgPM_AirMove");
 
 	g_hudStrafe = CreateHudSyncObj();
 	g_hudStats = CreateHudSyncObj();
 	g_hudPreSpeed = CreateHudSyncObj();
 }
 
-public rgPlayerPreThink(id) {
+public rgPM_Move(id) {
 	if (!is_user_connected(id) || is_user_bot(id) || is_user_hltv(id)) {
 		return HC_CONTINUE;
 	}
 
 	static iFog;
 
-	g_iFlags[id] = get_entvar(id, var_flags);
-	g_iButtons[id] = get_entvar(id, var_button);
-	g_iMoveType[id] = get_entvar(id, var_movetype);
-	g_flMaxSpeed[id] = get_entvar(id, var_maxspeed);
+	g_iButtons[id] = get_pmove(pm_oldbuttons);
+	g_flMaxSpeed[id] = get_pmove(pm_maxspeed);
 
-	g_bInDuck[id] = g_iFlags[id] & FL_DUCKING ? true : false;
-	g_bLadder[id] = g_iMoveType[id] == MOVETYPE_FLY;
-
-	get_entvar(id, var_origin, g_flOrigin[id]);
-	get_entvar(id, var_velocity, g_flVelocity[id]);
+	get_pmove(pm_origin, g_flOrigin[id]);
+	get_pmove(pm_velocity, g_flVelocity[id]);
 
 	g_flHorSpeed[id] = vector_hor_length(g_flVelocity[id]);
 	g_flPrevHorSpeed[id] = vector_hor_length(g_flPrevVelocity[id]);
 
-	new bool:isGound = g_iFlags[id] & FL_ONGROUND ? true : false;
-	isGound = isGound || g_bLadder[id];
-	new bool:isOldGound = g_iOldFlags[id] & FL_ONGROUND ? true : false;
-	isOldGound = isOldGound || g_bPrevLadder[id];
+	g_bInDuck[id] = get_pmove(pm_flags) & FL_DUCKING ? true : false;
+
+	new bool:isLadder = get_pmove(pm_movetype) == MOVETYPE_FLY ? true : false;
+
+	new bool:isGound = get_pmove(pm_onground) ? false : true || isLadder;
 
 	for (new i = 1; i < MaxClients; i++) {
 		g_isUserSpec[i] = is_user_spectating_player(i, id);
 	}
 
+	if (g_eOnOff[id][of_bSpeed])
+		show_prespeed(id);
+
 	if (isGound) {
 		iFog++;
 
-		if (!isOldGound) {
+		if (!g_isOldGround[id]) {
 			g_flPreHorSpeed[id] = g_flHorSpeed[id];
 			if (g_eWhichJump[id] != jt_Not) {
 				ready_jumps(id, g_flOrigin[id]);
@@ -84,7 +81,8 @@ public rgPlayerPreThink(id) {
 			g_eWhichJump[id] = jt_Not;
 			g_iDucks[id] = 0;
 			g_iJumps[id] = 0;
-			g_flDuckFirstZ[id] = 0.0; 
+			g_flDuckFirstZ[id] = 0.0;
+			g_flJumpFirstZ[id] = 0.0;
 
 			g_isTouched[id] = false;
 
@@ -101,41 +99,7 @@ public rgPlayerPreThink(id) {
 				g_iStrButtonsInfo[id][i] = bi_not;
 			}
 		}
-
-		if (!get_entvar(id, var_solid)) {
-			static ClassName[32];
-			get_entvar(get_entvar(id, var_groundentity), var_classname, ClassName, 32);
-
-			if (equali(ClassName, "func_train") ||
-				equali(ClassName, "func_conveyor") ||
-				equali(ClassName, "trigger_push") || equali(ClassName, "trigger_gravity")) {
-				g_eFailJump[id] = fj_notshow;
-			} else if (equali(ClassName, "func_door") || equali(ClassName, "func_door_rotating")) {
-				g_eFailJump[id] = fj_notshow;
-			}
-		}
 	} else {
-		if (g_eWhichJump[id]) {
-			g_eJumpstats[id][js_iFrames]++;
-
-			if (g_flHorSpeed[id] > g_eJumpstats[id][js_flEndSpeed]) {
-				if (g_iStrafes[id] < NSTRAFES) {
-					g_eStrafeStats[id][g_iStrafes[id]][st_flSpeed] += g_flHorSpeed[id] - g_eJumpstats[id][js_flEndSpeed];
-				}
-				g_eJumpstats[id][js_flEndSpeed] = g_flHorSpeed[id];
-			}
-
-			if ((g_flHorSpeed[id] < g_flTempSpeed[id]) && (g_iStrafes[id] < NSTRAFES)) {
-				g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] += g_flTempSpeed[id] - g_flHorSpeed[id];
-				if (g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] > 5) {
-					g_bCheckFrames[id] = true;
-				}
-			}
-			g_flTempSpeed[id] = g_flHorSpeed[id];
-
-			detect_hj(id, g_flOrigin[id], g_flFirstJump[id][2]);
-		}
-
 		if (g_eWhichJump[id] != jt_Not && !g_eFailJump[id]) {
 			if ((g_bInDuck[id] ? (g_flOrigin[id][2] + 18.0) : g_flOrigin[id][2]) - g_flFirstJump[id][2] < 0) {
 				g_eFailJump[id] = fl_fail;
@@ -143,9 +107,9 @@ public rgPlayerPreThink(id) {
 			}
 		}
 
-		if (isOldGound) {
-			new bool:isDuck = !g_bPrevInDuck[id] && !(g_iPrevButtons[id] & IN_DUCK) && g_iOldButtons[id] & IN_DUCK;
-			new bool:isJump = !isDuck && g_iPrevButtons[id] & IN_JUMP && !(g_iOldButtons[id] & IN_JUMP);
+		if (g_isOldGround[id]) {
+			new bool:isDuck = !g_bInDuck[id] && !(g_iButtons[id] & IN_JUMP) && g_iPrevButtons[id] & IN_DUCK;
+			new bool:isJump = !isDuck && g_iButtons[id] & IN_JUMP && !(g_iPrevButtons[id] & IN_JUMP);
 
 			if (g_bPrevLadder[id]) {
 				in_ladder(id, isJump);
@@ -168,34 +132,55 @@ public rgPlayerPreThink(id) {
 			}
 		}
 
+		if (g_eWhichJump[id] != jt_Not) {
+			g_isTouched[id] = get_pmove(pm_numtouch) ? true : g_isTouched[id];
+
+			if (g_eWhichJump[id] == jt_LongJump) {
+				detect_hj(id, g_flOrigin[id], g_flFirstJump[id][2]);
+			}
+		}
+
 		g_flLandTime[id] = get_gametime();
 		iFog = 0;
 	}
 	
-	g_iOldFlags[id] = g_iFlags[id];
-	g_iOldButtons[id] = g_iPrevButtons[id];
 	g_iPrevButtons[id] = g_iButtons[id];
 
 	vector_copy(g_flVelocity[id], g_flPrevVelocity[id]);
 	vector_copy(g_flOrigin[id], g_flPrevOrigin[id]);
 
-	g_bPrevLadder[id] = g_bLadder[id];
+	g_isOldGround[id] = isGound || isLadder;
+	g_bPrevLadder[id] = isLadder;
 	g_bPrevInDuck[id] = g_bInDuck[id];
 
 	return HC_CONTINUE;
 }
 
-public rgPlayerPostThink(id) {
+public rgPM_AirMove(id) {
 	if (!is_user_alive(id) || is_user_bot(id)) {
 		return HC_CONTINUE;
 	}
-
-	if (g_eOnOff[id][of_bSpeed])
-		show_prespeed(id);
 	
-	if (!g_eJumpType[id]) {
+	if (g_eWhichJump[id] == jt_Not) {
 		return HC_CONTINUE;
 	}
+
+	g_eJumpstats[id][js_iFrames]++;
+
+	if (g_flHorSpeed[id] > g_eJumpstats[id][js_flEndSpeed]) {
+		if (g_iStrafes[id] < NSTRAFES) {
+			g_eStrafeStats[id][g_iStrafes[id]][st_flSpeed] += g_flHorSpeed[id] - g_eJumpstats[id][js_flEndSpeed];
+		}
+		g_eJumpstats[id][js_flEndSpeed] = g_flHorSpeed[id];
+	}
+
+	if ((g_flHorSpeed[id] < g_flTempSpeed[id]) && (g_iStrafes[id] < NSTRAFES)) {
+		g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] += g_flTempSpeed[id] - g_flHorSpeed[id];
+		if (g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] > 5) {
+			g_bCheckFrames[id] = true;
+		}
+	}
+	g_flTempSpeed[id] = g_flHorSpeed[id];
 
 	new iButtons = get_entvar(id, var_button);
 	new Float:flVelocity[3]; get_entvar(id, var_velocity, flVelocity);
@@ -276,34 +261,6 @@ public rgPlayerPostThink(id) {
 	return HC_CONTINUE;
 }
 
-public HamTouch(id, entity) {
-	if (is_user_alive(id)) {
-		static Float:flVelocity[3];
-		get_entvar(id, var_velocity, flVelocity);
-		if (g_eJumpType[id] && !(get_entvar(id, var_flags) & FL_ONGROUND) && floatround(flVelocity[2], floatround_floor) < 0) {
-			g_isTouched[id] = true;
-		}
-	}
-}
-
-public fwdTouch(ent, id) {
-	static ClassName[32];
-	if (is_entity(ent)) {
-		get_entvar(ent, var_classname, ClassName, 31);
-	}
-
-	static ClassName2[32];
-	get_entvar(id, var_classname, ClassName2, 31);
-
-	if (equali(ClassName2, "player")) {
-		if (equali(ClassName, "func_train") ||
-			equali(ClassName, "func_conveyor") ||
-			equali(ClassName, "trigger_push") || equali(ClassName, "trigger_gravity")) {
-			g_isTrigger[id] = true;
-		}
-	}
-}
-
 public client_connect(id) {
 	client_cmd(id, "gl_vsync 0");
 
@@ -316,6 +273,5 @@ public client_connect(id) {
 	g_bCheckFrames[id] = false;
 	g_isBackWards[id] = false;
 	g_isTouched[id] = false;
-	g_isTrigger[id] = false;
 	g_eOnOff[id][of_bStats] = true;
 }

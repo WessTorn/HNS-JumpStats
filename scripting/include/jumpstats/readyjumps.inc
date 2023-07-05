@@ -91,9 +91,6 @@ public ready_jumps(id, Float:flFirstJump[3]) {
 	if (g_isTouched[id]) {
 		g_eFailJump[id] = fl_fail;
 	}
-	if (g_isTrigger[id]) {
-		g_eFailJump[id] = fl_fail;
-	}
 
 	calc_strafe(id);
 	
@@ -112,7 +109,6 @@ public ready_jumps(id, Float:flFirstJump[3]) {
 			show_chat(id, iDistance);
 	}
 
-	g_isTrigger[id] = false;
 	g_eTypePre[id] = TP_NOT;
 	g_isFalling[id] = false;
 	g_iVerInfo[id] = IS_MIDDLE;
@@ -214,9 +210,6 @@ public show_strafe_hud(id) {
 
 			if (g_isTouched[id]) {
 				iLen += format(szStrMess[iLen], sizeof szStrMess - iLen, "^n^ttouch");
-			}
-			if (g_isTrigger[id]) {
-				iLen += format(szStrMess[iLen], sizeof szStrMess - iLen, "^n^tsorry but first jump after triggers blocked");
 			}
 		}
 	}
@@ -360,10 +353,6 @@ public show_console(id) {
 					client_print(i, print_console, "");
 					client_print(i, print_console, "Jumpoff: %.f", g_eJumpstats[id][js_flJof]);
 				}
-			}
-			if (g_isTrigger[id]) {
-				client_print(i, print_console, "");
-				client_print(i, print_console, "Sorry but first jump after Triggers blocked.");
 			}
 		}
 	}
