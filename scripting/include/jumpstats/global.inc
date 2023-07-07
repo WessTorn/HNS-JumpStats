@@ -112,8 +112,8 @@ new FAIL_JUMP:g_eFailJump[MAX_PLAYERS + 1];
 
 new bool:g_isOldGround[MAX_PLAYERS + 1];
 
-new g_iButtons[MAX_PLAYERS + 1];
 new g_iPrevButtons[MAX_PLAYERS + 1];
+new g_iOldButtons[MAX_PLAYERS + 1];
 
 new Float:g_flOrigin[MAX_PLAYERS + 1][3];
 new Float:g_flPrevOrigin[MAX_PLAYERS + 1][3];

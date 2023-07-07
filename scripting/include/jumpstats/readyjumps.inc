@@ -203,7 +203,7 @@ public show_stats_hud(id) {
 	
 	if (g_ePreStats[id][ptSideWays]) {
 		iLen += format(szPreMess[iLen], sizeof szPreMess - iLen, "[sw] ");
-	} else if (g_ePreStats[id][ptSideWays]) {
+	} else if (g_ePreStats[id][ptBackWards]) {
 		iLen += format(szPreMess[iLen], sizeof szPreMess - iLen, "[bw] ");
 	}
 
@@ -250,7 +250,7 @@ public show_console(id) {
 	
 	if (g_ePreStats[id][ptSideWays]) {
 		iLen += format(szPreMess[iLen], sizeof szPreMess - iLen, "[sw] ");
-	} else if (g_ePreStats[id][ptSideWays]) {
+	} else if (g_ePreStats[id][ptBackWards]) {
 		iLen += format(szPreMess[iLen], sizeof szPreMess - iLen, "[bw] ");
 	}
 
@@ -350,7 +350,7 @@ public show_chat(id) {
 	
 	if (g_ePreStats[id][ptSideWays]) {
 		iLen += format(szJumpInfoMess[iLen], sizeof szJumpInfoMess - iLen, " (^3SideWays^1)");
-	} else if (g_ePreStats[id][ptSideWays]) {
+	} else if (g_ePreStats[id][ptBackWards]) {
 		iLen += format(szJumpInfoMess[iLen], sizeof szJumpInfoMess - iLen, " (^3Backwards^1)");
 	}
 

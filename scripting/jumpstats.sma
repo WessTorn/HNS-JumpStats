@@ -1,10 +1,7 @@
 #include <jumpstats/index>
 
-// Фиксить
-// BackWards
-
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.3.1", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.3.2", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -30,7 +27,7 @@ public rgPM_Move(id) {
 
 	static iFog;
 
-	g_iButtons[id] = get_pmove(pm_oldbuttons);
+	g_iPrevButtons[id] = get_pmove(pm_oldbuttons);
 	g_flMaxSpeed[id] = get_pmove(pm_maxspeed);
 
 	get_pmove(pm_origin, g_flOrigin[id]);
@@ -67,6 +64,7 @@ public rgPM_Move(id) {
 				get_entvar(iEnt[0], var_maxs, g_flLadderXYZ[id]);
 				get_entvar(iEnt[0], var_size, g_flLadderSize[id]);
 			}
+
 			if (g_eWhichJump[id] != jt_Not) {
 				reset_stats(id);
 			}
@@ -86,20 +84,19 @@ public rgPM_Move(id) {
 			}
 		}
 
-		if (!g_eJumpType[id] && g_iButtons[id] & IN_BACK && !g_ePreStats[id][ptBackWards]) {
-			g_ePreStats[id][ptBackWards] = true;
-		} else if (!g_eJumpType[id] && g_iButtons[id] & IN_FORWARD && g_ePreStats[id][ptBackWards]) {
-			g_ePreStats[id][ptBackWards] = false;
-		} else if (g_eWhichJump[id] == jt_BhopJump || g_eWhichJump[id] == jt_StandUpBhopJump) {
-			g_ePreStats[id][ptBackWards] = false;
+		if (!g_eJumpType[id]) {
+			if (g_ePreStats[id][ptBackWards])
+				g_ePreStats[id][ptBackWards] = !bool:(g_iPrevButtons[id] & IN_FORWARD);
+			else
+				g_ePreStats[id][ptBackWards] = bool:(g_iPrevButtons[id] & IN_BACK);
 		}
 
 		static bool:bOneReset;
 
-		if (iFog > 10 && !bOneReset) {
-			reset_stats(id);
+		if (iFog <= 10) {
 			bOneReset = true;
-		} else {
+		} else if (bOneReset) {
+			reset_stats(id);
 			bOneReset = false;
 		}
 	} else {
@@ -111,8 +108,8 @@ public rgPM_Move(id) {
 		}
 
 		if (g_isOldGround[id]) {
-			new bool:isDuck = !g_bInDuck[id] && !(g_iButtons[id] & IN_JUMP) && g_iPrevButtons[id] & IN_DUCK;
-			new bool:isJump = !isDuck && g_iButtons[id] & IN_JUMP && !(g_iPrevButtons[id] & IN_JUMP);
+			new bool:isDuck = !g_bInDuck[id] && !(g_iPrevButtons[id] & IN_JUMP) && g_iOldButtons[id] & IN_DUCK;
+			new bool:isJump = !isDuck && g_iPrevButtons[id] & IN_JUMP && !(g_iOldButtons[id] & IN_JUMP);
 
 			reset_strafes(id);
 
@@ -147,7 +144,7 @@ public rgPM_Move(id) {
 		iFog = 0;
 	}
 	
-	g_iPrevButtons[id] = g_iButtons[id];
+	g_iOldButtons[id] = g_iPrevButtons[id];
 
 	g_flPrevVelocity[id] = g_flVelocity[id];
 	g_flPrevOrigin[id] = g_flOrigin[id];
