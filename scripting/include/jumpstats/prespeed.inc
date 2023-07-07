@@ -24,7 +24,6 @@ new g_szPreType[][] = {
 	"fall",
 };
 
-
 enum STRUCT_PRE {
 	sp_iType,
 	sp_iFog,
@@ -43,7 +42,7 @@ new Float:g_flHudTime[MAX_PLAYERS + 1];
 public show_prespeed(id) {
 	new Float:g_flGameTime = get_gametime();
 	
-	if((g_flHudTime[id] + 0.05) > g_flGameTime)
+	if(g_flHudTime[id] + 0.05 > g_flGameTime)
 		return;
 
 	static bool:isPre;

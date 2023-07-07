@@ -45,7 +45,7 @@ public ready_jumps(id, Float:flFirstJump[3]) {
 
 	if (g_eWhichJump[id] == jt_LadderJump) {
 		if (floatabs(g_flFirstJump[id][2] - flOrigin[2]) > 4.0) {
-			g_eFailJump[id] = fl_fail;
+			g_eFailJump[id] = fj_fail;
 		}
 
 		g_eJumpstats[id][js_flDistance] = get_distance_f(g_flFirstJump[id], flOrigin) + g_flLadderDist[id];
@@ -76,7 +76,7 @@ public ready_jumps(id, Float:flFirstJump[3]) {
 		g_eFailJump[id] = fj_notshow;
 
 	if (g_isTouched[id]) {
-		g_eFailJump[id] = fl_fail;
+		g_eFailJump[id] = fj_fail;
 	}
 
 	calc_strafe(id);
@@ -135,7 +135,7 @@ public calc_strafe(id) {
 
 			if (flStrFailSpeed[str] > 200 && g_bCheckFrames[id]) {
 				g_bCheckFrames[id] = false;
-				g_eFailJump[id] = fl_fail;
+				g_eFailJump[id] = fj_fail;
 			}
 
 			if (g_iStrButtonsInfo[id][str] == 2 || g_iStrButtonsInfo[id][str] == 4)

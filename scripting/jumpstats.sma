@@ -1,10 +1,10 @@
 #include <jumpstats/index>
 
 // Фиксить
-// Ладдер (срейфы)
+// BackWards
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.2.6", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.2.7", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -35,11 +35,12 @@ public rgPM_Move(id) {
 	g_flHorSpeed[id] = vector_hor_length(g_flVelocity[id]);
 	g_flPrevHorSpeed[id] = vector_hor_length(g_flPrevVelocity[id]);
 
-	g_bInDuck[id] = get_pmove(pm_flags) & FL_DUCKING ? true : false;
+	g_bInDuck[id] = bool:(get_pmove(pm_flags) & FL_DUCKING);
 
-	new bool:isLadder = get_pmove(pm_movetype) == MOVETYPE_FLY ? true : false;
+	new bool:isLadder = bool:(get_pmove(pm_movetype) == MOVETYPE_FLY);
 
-	new bool:isGound = get_pmove(pm_onground) == -1 ? false : true;
+	new bool:isGound = !bool:(get_pmove(pm_onground) == -1);
+
 	isGound = isGound || isLadder;
 
 	g_isOldGround[id] = g_isOldGround[id] || g_bPrevLadder[id];
@@ -54,13 +55,6 @@ public rgPM_Move(id) {
 	if (isGound) {
 		iFog++;
 
-		if (!g_isOldGround[id]) {
-			g_flPreHorSpeed[id] = g_flHorSpeed[id];
-			if (g_eWhichJump[id] != jt_Not) {
-				ready_jumps(id, g_flOrigin[id]);
-			}
-		}
-
 		if (isLadder) {
 			new iEnt[1];
 			find_sphere_class(id, "func_ladder", 18.0, iEnt, 1);
@@ -68,6 +62,40 @@ public rgPM_Move(id) {
 			if (iEnt[0] != 0) {
 				get_entvar(iEnt[0], var_maxs, g_flLadderXYZ[id]);
 				get_entvar(iEnt[0], var_size, g_flLadderSize[id]);
+			}
+			if (g_eWhichJump[id] != jt_Not) {
+				g_isFalling[id] = false;
+				g_iVerInfo[id] = IS_MIDDLE;
+				g_eJumpType[id] = IS_JUMP_NOT;
+				g_eDuckType[id] = IS_DUCK_NOT;
+				g_eWhichJump[id] = jt_Not;
+				g_iDucks[id] = 0;
+				g_iJumps[id] = 0;
+				g_flDuckFirstZ[id] = 0.0;
+				g_flJumpFirstZ[id] = 0.0;
+
+				g_isTouched[id] = false;
+
+				g_ePreStats[id][ptBackWards] = false;
+				g_eFailJump[id] = fj_good;
+				g_iDetectHJ[id] = 0;
+				g_eJumpstats[id][js_iJumpBlock] = 1000;
+				g_eJumpstats[id][js_iFrames] = 0;
+				g_iStrafes[id] = 0;
+				g_eJumpstats[id][js_flJof] = 0.0;
+				g_isLadderBhop[id] = false;
+
+				g_bCheckFrames[id] = false;
+				for (new i = 0; i < NSTRAFES; i++) {
+					g_iStrButtonsInfo[id][i] = bi_not;
+				}
+			}
+		}
+
+		if (!g_isOldGround[id]) {
+			g_flPreHorSpeed[id] = g_flHorSpeed[id];
+			if (g_eWhichJump[id] != jt_Not) {
+				ready_jumps(id, g_flOrigin[id]);
 			}
 		}
 
@@ -116,7 +144,7 @@ public rgPM_Move(id) {
 	} else {
 		if (g_eWhichJump[id] != jt_Not && !g_eFailJump[id]) {
 			if ((g_bInDuck[id] ? (g_flOrigin[id][2] + 18.0) : g_flOrigin[id][2]) - g_flFirstJump[id][2] < 0) {
-				g_eFailJump[id] = fl_fail;
+				g_eFailJump[id] = fj_fail;
 				ready_jumps(id, g_flPrevOrigin[id]);
 			}
 		}
@@ -147,6 +175,9 @@ public rgPM_Move(id) {
 					// ФАЛЛ
 				}
 			}
+		} else {
+			if (g_eWhichJump[id] != jt_Not)
+				g_isTouched[id] = get_pmove(pm_numtouch) ? true : g_isTouched[id];
 		}
 
 		g_flLandTime[id] = get_gametime();
@@ -155,10 +186,10 @@ public rgPM_Move(id) {
 	
 	g_iPrevButtons[id] = g_iButtons[id];
 
-	vector_copy(g_flVelocity[id], g_flPrevVelocity[id]);
-	vector_copy(g_flOrigin[id], g_flPrevOrigin[id]);
+	g_flPrevVelocity[id] = g_flVelocity[id];
+	g_flPrevOrigin[id] = g_flOrigin[id];
 
-	g_isOldGround[id] = isGound || isLadder;
+	g_isOldGround[id] = isGound;
 	g_bPrevLadder[id] = isLadder;
 	g_bPrevInDuck[id] = g_bInDuck[id];
 
@@ -176,16 +207,14 @@ public rgPM_AirMove(id) {
 
 	g_eJumpstats[id][js_iFrames]++;
 
-	new iButtons = get_entvar(id, var_button);
+	new iButtons = get_ucmd(get_pmove(pm_cmd), ucmd_buttons);
+
 	new Float:flVelocity[3]; get_pmove(pm_velocity, flVelocity);
 
 	new Float:flStrSpeed = vector_hor_length(flVelocity);
 
 	new Float:flAngles[3]; get_entvar(id, var_angles, flAngles);
 	static Float:flOldAngle;
-
-
-	g_isTouched[id] = get_pmove(pm_numtouch) ? true : g_isTouched[id];
 
 	if (g_eWhichJump[id] == jt_LongJump) {
 		detect_hj(id, g_flOrigin[id], g_flFirstJump[id][2]);

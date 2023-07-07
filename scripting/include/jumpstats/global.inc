@@ -34,7 +34,7 @@ enum _:PRESTATS {
 	ptSideWays,
 	ptBackWards,
 	ptLadderBhop
-}
+};
 
 new bool:g_ePreStats[MAX_PLAYERS + 1][PRESTATS];
 
@@ -104,9 +104,9 @@ new g_iJumps[MAX_PLAYERS + 1];
 
 enum FAIL_JUMP {
 	fj_good = 0,
-	fl_fail,
+	fj_fail,
 	fj_notshow
-}
+};
 
 new FAIL_JUMP:g_eFailJump[MAX_PLAYERS + 1];
 
@@ -134,6 +134,10 @@ new bool:g_bPrevInDuck[MAX_PLAYERS + 1];
 new bool:g_bPrevLadder[MAX_PLAYERS + 1];
 new bool:g_isLadderBhop[MAX_PLAYERS + 1];
 
+new Float:g_flLadderXYZ[MAX_PLAYERS + 1][3];
+new Float:g_flLadderSize[MAX_PLAYERS + 1][3];
+new Float:g_flLadderDist[MAX_PLAYERS + 1];
+
 new bool:g_isFalling[MAX_PLAYERS + 1];
 new bool:g_isTouched[MAX_PLAYERS + 1];
 
@@ -150,8 +154,3 @@ new g_isUserSpec[MAX_PLAYERS + 1];
 new g_hudStrafe;
 new g_hudStats;
 new g_hudPreSpeed;
-
-
-new Float:g_flLadderXYZ[MAX_PLAYERS + 1][3];
-new Float:g_flLadderSize[MAX_PLAYERS + 1][3];
-new Float:g_flLadderDist[MAX_PLAYERS + 1];

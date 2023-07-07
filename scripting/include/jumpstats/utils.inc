@@ -7,14 +7,6 @@ stock Float:vector_hor_length(Float:flVel[3]) {
 	return 0.0;
 }
 
-stock vector_copy(Float:flVec1[3], Float:flVec2[3]) {
-	flVec2[0] = flVec1[0];
-	flVec2[1] = flVec1[1];
-	flVec2[2] = flVec1[2];
-	return 0;
-}
-
-
 stock detect_hj(id, Float:flOrigin[3], Float:VerOrigin) {
 	new Float:flStarthj[3];
 	flStarthj[0] = flOrigin[0];
@@ -43,7 +35,7 @@ stock detect_hj(id, Float:flOrigin[3], Float:VerOrigin) {
 
 enum _:ChatDist {
 	good = 0, pro, holy, leet, god
-}
+};
 
 public get_colorchat_by_distance(JumpType:iJumpType, Float:mSpeed) {
 	new aDistance[ChatDist];
