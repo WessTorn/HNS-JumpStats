@@ -7,7 +7,7 @@
 // Ладдер (срейфы)
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.2.2", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.2.3", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -15,7 +15,7 @@ public plugin_init() {
 	register_forward(FM_Touch, "fwdTouch", 1);
 
 	RegisterHookChain(RG_PM_Move, "rgPM_Move");
-	RegisterHookChain(RG_PM_AirMove, "rgPM_AirMove");
+	RegisterHookChain(RG_PM_AirMove, "rgPM_AirMove", true);
 
 	g_hudStrafe = CreateHudSyncObj();
 	g_hudStats = CreateHudSyncObj();
@@ -57,6 +57,13 @@ public rgPM_Move(id) {
 	if (isGound) {
 		iFog++;
 
+		if (!g_isOldGround[id]) {
+			g_flPreHorSpeed[id] = g_flHorSpeed[id];
+			if (g_eWhichJump[id] != jt_Not) {
+				ready_jumps(id, g_flOrigin[id]);
+			}
+		}
+
 		if (isLadder) {
 			new iEnt[1];
 			find_sphere_class(id, "func_ladder", 18.0, iEnt, 1);
@@ -64,13 +71,6 @@ public rgPM_Move(id) {
 			if (iEnt[0] != 0) {
 				get_entvar(iEnt[0], var_maxs, g_flLadderXYZ[id]);
 				get_entvar(iEnt[0], var_size, g_flLadderSize[id]);
-			}
-		}
-
-		if (!g_isOldGround[id]) {
-			g_flPreHorSpeed[id] = g_flHorSpeed[id];
-			if (g_eWhichJump[id] != jt_Not) {
-				ready_jumps(id, g_flOrigin[id]);
 			}
 		}
 
@@ -190,23 +190,8 @@ public rgPM_AirMove(id) {
 
 	g_eJumpstats[id][js_iFrames]++;
 
-	if (g_flHorSpeed[id] > g_eJumpstats[id][js_flEndSpeed]) {
-		if (g_iStrafes[id] < NSTRAFES) {
-			g_eStrafeStats[id][g_iStrafes[id]][st_flSpeed] += g_flHorSpeed[id] - g_eJumpstats[id][js_flEndSpeed];
-		}
-		g_eJumpstats[id][js_flEndSpeed] = g_flHorSpeed[id];
-	}
-
-	if ((g_flHorSpeed[id] < g_flTempSpeed[id]) && (g_iStrafes[id] < NSTRAFES)) {
-		g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] += g_flTempSpeed[id] - g_flHorSpeed[id];
-		if (g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] > 5) {
-			g_bCheckFrames[id] = true;
-		}
-	}
-	g_flTempSpeed[id] = g_flHorSpeed[id];
-
 	new iButtons = get_entvar(id, var_button);
-	new Float:flVelocity[3]; get_entvar(id, var_velocity, flVelocity);
+	new Float:flVelocity[3]; get_pmove(pm_velocity, flVelocity);
 
 	new Float:flStrSpeed = vector_hor_length(flVelocity);
 
@@ -278,6 +263,21 @@ public rgPM_AirMove(id) {
 		g_iStrOldButtons[id] = 0;
 	else if (isTurningLeft || isTurningRight)
 		g_iStrOldButtons[id] = iButtons;
+
+	if (g_flHorSpeed[id] > g_eJumpstats[id][js_flEndSpeed]) {
+		if (g_iStrafes[id] < NSTRAFES) {
+			g_eStrafeStats[id][g_iStrafes[id]][st_flSpeed] += g_flHorSpeed[id] - g_eJumpstats[id][js_flEndSpeed];
+		}
+		g_eJumpstats[id][js_flEndSpeed] = g_flHorSpeed[id];
+	}
+
+	if ((g_flHorSpeed[id] < g_flTempSpeed[id]) && (g_iStrafes[id] < NSTRAFES)) {
+		g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] += g_flTempSpeed[id] - g_flHorSpeed[id];
+		if (g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] > 5) {
+			g_bCheckFrames[id] = true;
+		}
+	}
+	g_flTempSpeed[id] = g_flHorSpeed[id];
 
 	flOldAngle = flAngles[1];
 
