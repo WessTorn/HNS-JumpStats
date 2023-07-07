@@ -1,7 +1,9 @@
 #include <jumpstats/index>
 
+// Фикс бхоп дроп/ап
+
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.3.2", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.3.3", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -140,7 +142,6 @@ public rgPM_Move(id) {
 				g_isTouched[id] = get_pmove(pm_numtouch) ? true : g_isTouched[id];
 		}
 
-		g_flLandTime[id] = get_gametime();
 		iFog = 0;
 	}
 	
@@ -200,32 +201,24 @@ public rgPM_AirMove(id) {
 	}
 
 	if (iButtons & IN_MOVELEFT && !(g_iStrOldButtons[id] & IN_MOVELEFT) && !(iButtons & IN_MOVERIGHT) && !(iButtons & IN_BACK) && !(iButtons & IN_FORWARD) && (isTurningLeft || isTurningRight)) {
-		if (g_iStrafes[id] < NSTRAFES)
-			g_eStrafeStats[id][g_iStrafes[id]][st_flTime] = get_gametime();
 		g_iStrafes[id] += 1;
 
 		if (g_iStrafes[id] > 0 && g_iStrafes[id] < 100) {
 			g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_A;
 		}
 	} else if (iButtons & IN_MOVERIGHT && !(g_iStrOldButtons[id] & IN_MOVERIGHT) && !(iButtons & IN_MOVELEFT) && !(iButtons & IN_BACK) && !(iButtons & IN_FORWARD) && (isTurningLeft || isTurningRight)) {
-		if (g_iStrafes[id] < NSTRAFES)
-			g_eStrafeStats[id][g_iStrafes[id]][st_flTime] = get_gametime();
 		g_iStrafes[id] += 1;
 
 		if (g_iStrafes[id] > 0 && g_iStrafes[id] < 100) {
 			g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_D;
 		}
 	} else if (iButtons & IN_BACK && !(g_iStrOldButtons[id] & IN_BACK) && !(iButtons & IN_MOVELEFT) && !(iButtons & IN_MOVERIGHT) && !(iButtons & IN_FORWARD) && (isTurningLeft || isTurningRight)) {
-		if (g_iStrafes[id] < NSTRAFES)
-			g_eStrafeStats[id][g_iStrafes[id]][st_flTime] = get_gametime();
 		g_iStrafes[id] += 1;
 
 		if (g_iStrafes[id] > 0 && g_iStrafes[id] < 100) {
 			g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_S;
 		}
 	} else if (iButtons & IN_FORWARD && !(g_iStrOldButtons[id] & IN_FORWARD) && !(iButtons & IN_MOVELEFT) && !(iButtons & IN_MOVERIGHT) && !(iButtons & IN_BACK) && (isTurningLeft || isTurningRight)) {
-		if (g_iStrafes[id] < NSTRAFES)
-			g_eStrafeStats[id][g_iStrafes[id]][st_flTime] = get_gametime();
 		g_iStrafes[id] += 1;
 
 		if (g_iStrafes[id] > 0 && g_iStrafes[id] < 100) {
@@ -264,6 +257,9 @@ public rgPM_AirMove(id) {
 			g_bCheckFrames[id] = true;
 		}
 	}
+
+	g_eStrafeStats[id][g_iStrafes[id]][st_iFrame] += 1;
+
 	g_flTempSpeed[id] = g_flHorSpeed[id];
 
 	flOldAngle = flAngles[1];

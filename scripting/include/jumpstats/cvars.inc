@@ -51,7 +51,7 @@ init_cvars() {
 
 	bind_pcvar_num(register_cvar("js_hud_stats", "2"),		g_pCvar[c_iStats]);
 	bind_pcvar_num(register_cvar("js_hud_strafe", "3"),		g_pCvar[c_iStrafe]);
-	bind_pcvar_num(register_cvar("js_hud_pre", "3"),			g_pCvar[c_iPreSpeed]);
+	bind_pcvar_num(register_cvar("js_hud_prespeed", "1"),			g_pCvar[c_iPreSpeed]);
 
 	bind_pcvar_num(register_cvar("js_bug_check", "1"),		g_pCvar[c_iBug]);
 	bind_pcvar_num(register_cvar("js_noslowdown", "0"),		g_pCvar[c_iNoslow]);

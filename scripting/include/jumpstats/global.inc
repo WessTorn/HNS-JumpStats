@@ -50,7 +50,7 @@ enum _:StrafeStats {
 	Float:st_flSpeedFail,
 	st_flSyncGood,
 	st_flSyncBad,
-	Float:st_flTime
+	st_iFrame,
 };
 
 new g_eStrafeStats[MAX_PLAYERS + 1][14][StrafeStats];
@@ -144,8 +144,6 @@ new bool:g_isTouched[MAX_PLAYERS + 1];
 new bool:g_bCheckFrames[MAX_PLAYERS + 1];
 
 new Float:g_flTempSpeed[MAX_PLAYERS + 1];
-new Float:g_flJumpOffTime[MAX_PLAYERS + 1];
-new Float:g_flLandTime[MAX_PLAYERS + 1];
 
 new g_iDetectHJ[MAX_PLAYERS + 1];
 

@@ -45,8 +45,6 @@ stock reset_strafes(id) {
 	g_iStrafes[id] = 0;
 	g_iStrOldButtons[id] = 0;
 	g_flTempSpeed[id] = 0.0;
-	g_flJumpOffTime[id] = 0.0;
-	g_flLandTime[id] = 0.0;
 }
 
 
