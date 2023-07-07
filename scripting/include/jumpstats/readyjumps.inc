@@ -339,7 +339,7 @@ public show_console(id) {
 
 public show_chat(id) {
 	new aDistance[ChatDist];
-	aDistance = get_colorchat_by_distance(g_eWhichJump[id], g_flMaxSpeed[id]);
+	get_colorchat_by_distance(id, aDistance, g_eWhichJump[id]);
 
 	new szJumpInfoMess[64];
 	new iLen;
@@ -359,33 +359,34 @@ public show_chat(id) {
 
 	for (new i = 0; i < iNum; i++) {
 		new iPlayer = iPlayers[i];
-		if (g_eOnOff[iPlayer][of_bChatInfo] == true) {
-			switch (g_eWhichJump[id]) {
-				case jt_Multi_CountJump, jt_Multi_StandUPCountJump: {
-					if (g_eJumpstats[id][js_flDistance] >= aDistance[god]) {
-						client_print_color(iPlayer, print_team_red, ">> ^4%n ^3jumped ^4%.0f ^3with ^4%s%s ^3(pre:^4%.0f ^3str:^4%i ^3sync:^4%i%%^3) (^4%d ^3ducks)", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], g_iDucks[id]);
-					} else if (g_eJumpstats[id][js_flDistance] >= aDistance[leet]) {
-						client_print_color(iPlayer, print_team_red, ">> ^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync:^3%i%%^1) (^3%d ^1ducks)", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], g_iDucks[id]);
-					} else if (g_eJumpstats[id][js_flDistance] >= aDistance[holy]) {
-						client_print_color(iPlayer, print_team_blue, ">> ^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync:^3%i%%^1) (^3%d ^1ducks)", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], g_iDucks[id]);
-					} else if (g_eJumpstats[id][js_flDistance] >= aDistance[pro]) {
-						client_print_color(iPlayer, print_team_blue, ">> ^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync:^3%i%%^1) (^3%d ^1ducks)", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], g_iDucks[id]);
-					} else if (g_eJumpstats[id][js_flDistance] >= aDistance[good]) {
-						client_print_color(iPlayer, print_team_grey, ">> ^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync:^3%i%%^1) (^3%d ^1ducks)", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], g_iDucks[id]);
-					}
+		if (!g_eOnOff[iPlayer][of_bChatInfo])
+			continue;
+
+		switch (g_eWhichJump[id]) {
+			case jt_Multi_CountJump, jt_Multi_StandUPCountJump: {
+				if (g_eJumpstats[id][js_flDistance] >= aDistance[god]) {
+					client_print_color(iPlayer, print_team_red, "^4%n ^3jumped ^4%.0f ^3with ^4%s%s ^3(pre:^4%.0f ^3str:^4%i ^3sync:^4%i%%^3) (^4%d ^3ducks)", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], g_iDucks[id]);
+				} else if (g_eJumpstats[id][js_flDistance] >= aDistance[leet]) {
+					client_print_color(iPlayer, print_team_red, "^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync:^3%i%%^1) (^3%d ^1ducks)", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], g_iDucks[id]);
+				} else if (g_eJumpstats[id][js_flDistance] >= aDistance[holy]) {
+					client_print_color(iPlayer, print_team_blue, "^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync:^3%i%%^1) (^3%d ^1ducks)", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], g_iDucks[id]);
+				} else if (g_eJumpstats[id][js_flDistance] >= aDistance[pro]) {
+					client_print_color(iPlayer, print_team_blue, "^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync:^3%i%%^1) (^3%d ^1ducks)", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], g_iDucks[id]);
+				} else if (g_eJumpstats[id][js_flDistance] >= aDistance[good]) {
+					client_print_color(iPlayer, print_team_grey, "^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync:^3%i%%^1) (^3%d ^1ducks)", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], g_iDucks[id]);
 				}
-				default: {
-					if (g_eJumpstats[id][js_flDistance] >= aDistance[god]) {
-						client_print_color(iPlayer, print_team_red, ">> ^4%n ^3jumped ^4%.0f ^3with ^4%s ^3(pre:^4%.0f ^3str:^4%i ^3sync:^4%i%%^3)^1%s%s", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], szJumpInfoMess);
-					} else if (g_eJumpstats[id][js_flDistance] >= aDistance[leet]) {
-						client_print_color(iPlayer, print_team_red, ">> ^3%n ^1jumped ^3%.0f ^1with ^3%s ^1(pre:^3%.0f ^1str:^3%i ^1sync:^3%i%%^1)%s%s", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], szJumpInfoMess);
-					} else if (g_eJumpstats[id][js_flDistance] >= aDistance[holy]) {
-						client_print_color(iPlayer, print_team_blue, ">> ^3%n ^1jumped ^3%.0f ^1with ^3%s ^1(pre:^3%.0f ^1str:^3%i ^1sync: ^3%i%%^1)%s%s", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], szJumpInfoMess);
-					} else if (g_eJumpstats[id][js_flDistance] >= aDistance[pro]) {
-						client_print_color(iPlayer, print_team_blue, ">> ^3%n ^1jumped ^3%.0f ^1with ^3%s ^1(pre:^3%.0f ^1str:^3%i ^1sync: ^3%i%%^1)%s%s", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], szJumpInfoMess);
-					} else if (g_eJumpstats[id][js_flDistance] >= aDistance[good]) {
-						client_print_color(iPlayer, print_team_grey, ">> ^3%n ^1jumped ^3%.0f ^1with ^3%s ^1(pre:^3%.0f ^1str:^3%i ^1sync: ^3%i%%^1)%s%s", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], szJumpInfoMess);
-					}
+			}
+			default: {
+				if (g_eJumpstats[id][js_flDistance] >= aDistance[god]) {
+					client_print_color(iPlayer, print_team_red, "^4%n ^3jumped ^4%.0f ^3with ^4%s%s ^3(pre:^4%.0f ^3str:^4%i ^3sync:^4%i%%^3)^1%s", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], szJumpInfoMess);
+				} else if (g_eJumpstats[id][js_flDistance] >= aDistance[leet]) {
+					client_print_color(iPlayer, print_team_red, "^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync:^3%i%%^1)%s", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], szJumpInfoMess);
+				} else if (g_eJumpstats[id][js_flDistance] >= aDistance[holy]) {
+					client_print_color(iPlayer, print_team_blue, "^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync: ^3%i%%^1)%s", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], szJumpInfoMess);
+				} else if (g_eJumpstats[id][js_flDistance] >= aDistance[pro]) {
+					client_print_color(iPlayer, print_team_blue, "^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync: ^3%i%%^1)%s", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], szJumpInfoMess);
+				} else if (g_eJumpstats[id][js_flDistance] >= aDistance[good]) {
+					client_print_color(iPlayer, print_team_grey, "^3%n ^1jumped ^3%.0f ^1with ^3%s%s ^1(pre:^3%.0f ^1str:^3%i ^1sync: ^3%i%%^1)%s", id, g_eJumpstats[id][js_flDistance], g_ePreStats[id][ptLadderBhop] ? "Ladder " : "", g_eNameJumps[g_eWhichJump[id]][info_chat], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iStrafes[id], g_iStrAllEff[id], szJumpInfoMess);
 				}
 			}
 		}

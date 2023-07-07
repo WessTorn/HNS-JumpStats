@@ -4,7 +4,7 @@
 // BackWards
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.3.0", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.3.1", "WessTorn");
 
 	init_cvars();
 	init_cmds();

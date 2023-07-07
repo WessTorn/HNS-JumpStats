@@ -88,10 +88,8 @@ enum _:ChatDist {
 	good = 0, pro, holy, leet, god
 };
 
-public get_colorchat_by_distance(JumpType:iJumpType, Float:mSpeed) {
-	new aDistance[ChatDist];
-
-	new iTdist = floatround((250.0 - mSpeed) * 0.73, floatround_floor);
+public get_colorchat_by_distance(id, aDistance[ChatDist], JumpType:iJumpType/*, Float:mSpeed*/) {
+	//new iTdist = floatround((250.0 - mSpeed) * 0.73, floatround_floor);
 
 	new aircj;
 	if (get_cvar_pointer("sv_airaccelerate") > 10) {
@@ -159,14 +157,13 @@ public get_colorchat_by_distance(JumpType:iJumpType, Float:mSpeed) {
 		}
 	}
 
-	if (mSpeed != 250.0 && iJumpType != jt_LadderJump) {
-		aDistance[god] = aDistance[god] - iTdist;
-		aDistance[leet] = aDistance[leet] - iTdist;
-		aDistance[holy] = aDistance[holy] - iTdist;
-		aDistance[pro] = aDistance[pro] - iTdist;
-		aDistance[good] = aDistance[good] - iTdist;
+	if (g_ePreStats[id][ptLadderBhop]) {
+		aDistance[god] = 272;
+		aDistance[leet] = 270;
+		aDistance[holy] = 265;
+		aDistance[pro] = 260;
+		aDistance[good] = 255;
 	}
-	return aDistance;
 }
 
 
