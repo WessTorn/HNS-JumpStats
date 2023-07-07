@@ -1,7 +1,4 @@
-public in_ducks(id, iFog) {
-	g_iStrafes[id] = 0;
-	g_flTempSpeed[id] = 0.0;
-	
+public in_ducks(id, iFog) {	
 	if (iFog > 10) {
 		g_iDucks[id] = 0;
 		g_iDucks[id]++;

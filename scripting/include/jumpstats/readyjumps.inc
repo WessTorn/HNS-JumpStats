@@ -92,27 +92,9 @@ public ready_jumps(id, Float:flFirstJump[3]) {
 			show_chat(id);
 	}
 
-	g_isFalling[id] = false;
-	g_iVerInfo[id] = IS_MIDDLE;
+	reset_stats(id);
+
 	g_eJumpType[id] = IS_JUMP;
-	g_eDuckType[id] = IS_DUCK_NOT;
-	g_eWhichJump[id] = jt_Not;
-	g_eFailJump[id] = fj_good;
-	g_flDuckFirstZ[id] = 0.0;
-
-	g_isTouched[id] = false;
-
-	g_iDetectHJ[id] = 0;
-	g_eJumpstats[id][js_iJumpBlock] = 1000;
-	g_eJumpstats[id][js_iFrames] = 0;
-	g_iStrafes[id] = 0;
-	g_eJumpstats[id][js_flJof] = 0.0;
-	arrayset(g_ePreStats[id], false, PRESTATS);
-
-	g_bCheckFrames[id] = false;
-	for (new i = 0; i < NSTRAFES; i++) {
-		g_iStrButtonsInfo[id][i] = bi_not;
-	}
 }
 
 public calc_strafe(id) {

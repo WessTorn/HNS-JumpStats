@@ -1,21 +1,8 @@
 public in_bhop_js(id, iFog) {
-	g_iStrafes[id] = 0;
 	g_flFirstJump[id] = g_flPrevOrigin[id];
 	g_flJumpOffTime[id] = get_gametime();
-	g_flTempSpeed[id] = 0.0;
-
-	for (new i = 0; i < NSTRAFES; i++) {
-		g_eStrafeStats[id][i][st_flSpeed] = 0.0;
-		g_eStrafeStats[id][i][st_flSpeedFail] = 0.0;
-		g_eStrafeStats[id][i][st_flSyncGood] = 0;
-		g_eStrafeStats[id][i][st_flSyncBad] = 0;
-		g_eStrafeStats[id][i][st_flTime] = 0.0;
-	}
-
-	g_iStrOldButtons[id] = 0;
 	
-	if (iFog > 10)
-	{
+	if (iFog > 10) {
 		g_iJumps[id] = 0;
 		g_iJumps[id]++;
 		g_eJumpData[id][g_iJumps[id]][JUMP_PRE] = g_flHorSpeed[id];
@@ -35,9 +22,7 @@ public in_bhop_js(id, iFog) {
 
 		show_pre(id, pre_jump, g_flPrevHorSpeed[id]);
 		// ЖАМП
-	}
-	else
-	{
+	} else {
 		g_iJumps[id]++;
 		g_eJumpData[id][g_iJumps[id]][JUMP_PRE] = g_flHorSpeed[id];
 		g_eJumpData[id][g_iJumps[id]][JUMP_FOG] = iFog;

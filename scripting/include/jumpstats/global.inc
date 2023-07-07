@@ -76,7 +76,7 @@ enum DUCK_DATA {
 
 new DUCK_DATA:g_eDuckType[MAX_PLAYERS + 1];
 
-enum STATS_DUCKS {
+enum _:STATS_DUCKS {
 	Float:DUCK_PRE,
 	DUCK_FOG
 };
@@ -94,7 +94,7 @@ enum JUMP_DATA {
 
 new JUMP_DATA:g_eJumpType[MAX_PLAYERS + 1];
 
-enum STATS_JUMPS {
+enum _:STATS_JUMPS {
 	Float:JUMP_PRE,
 	JUMP_FOG
 };

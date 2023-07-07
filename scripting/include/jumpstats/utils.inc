@@ -1,3 +1,54 @@
+stock reset_stats(id) {
+	g_eWhichJump[id] = jt_Not;
+
+	arrayset(g_eJumpstats[id], 0, JUMPSTATS);
+	g_eJumpstats[id][js_iJumpBlock] = 1000;
+
+	arrayset(g_ePreStats[id], false, PRESTATS);
+
+	reset_strafes(id);
+
+	g_iVerInfo[id] = IS_MIDDLE;
+	g_flDuckFirstZ[id] = 0.0;
+	g_flJumpFirstZ[id] = 0.0;
+
+	g_eDuckType[id] = IS_DUCK_NOT;
+	for (new i = 0; i < 100; i++) {
+   		arrayset(g_eDuckData[id][i], 0, STATS_DUCKS);
+	}
+	g_iDucks[id] = 0;
+
+	g_eJumpType[id] = IS_JUMP_NOT;
+	for (new i = 0; i < 100; i++) {
+   		arrayset(g_eJumpData[id][i], 0, STATS_JUMPS);
+	}
+	g_iJumps[id] = 0;
+
+	g_eFailJump[id] = fj_good;
+
+	arrayset(g_flFirstJump[id], 0.0, 3);
+	
+	g_isLadderBhop[id] = false;
+	g_bCheckFrames[id] = false;
+	g_isFalling[id] = false;
+	g_isTouched[id] = false;
+
+	g_iDetectHJ[id] = 0;
+}
+
+stock reset_strafes(id) {
+	for (new i = 0; i < NSTRAFES; i++) {
+		arrayset(g_eStrafeStats[id][i], 0, StrafeStats);
+		arrayset(g_iStrButtonsInfo[id][i], bi_not, buttons_info);
+	}
+	
+	g_iStrafes[id] = 0;
+	g_iStrOldButtons[id] = 0;
+	g_flTempSpeed[id] = 0.0;
+	g_flJumpOffTime[id] = 0.0;
+	g_flLandTime[id] = 0.0;
+}
+
 
 stock Float:vector_hor_length(Float:flVel[3]) {
 	new Float:flNorma = floatpower(flVel[0], 2.0) + floatpower(flVel[1], 2.0);

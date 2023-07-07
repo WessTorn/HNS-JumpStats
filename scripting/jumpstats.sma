@@ -4,19 +4,23 @@
 // BackWards
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.2.7", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.2.8", "WessTorn");
 
 	init_cvars();
 	init_cmds();
 
-	register_forward(FM_Touch, "fwdTouch", 1);
-
+	RegisterHookChain(RG_CBasePlayer_Spawn, "rgPlayerSpawn", true);
 	RegisterHookChain(RG_PM_Move, "rgPM_Move");
 	RegisterHookChain(RG_PM_AirMove, "rgPM_AirMove", true);
 
 	g_hudStrafe = CreateHudSyncObj();
 	g_hudStats = CreateHudSyncObj();
 	g_hudPreSpeed = CreateHudSyncObj();
+}
+
+public rgPlayerSpawn(id) {
+	reset_stats(id);
+	g_eFailJump[id] = fj_notshow;
 }
 
 public rgPM_Move(id) {
@@ -64,31 +68,7 @@ public rgPM_Move(id) {
 				get_entvar(iEnt[0], var_size, g_flLadderSize[id]);
 			}
 			if (g_eWhichJump[id] != jt_Not) {
-				g_isFalling[id] = false;
-				g_iVerInfo[id] = IS_MIDDLE;
-				g_eJumpType[id] = IS_JUMP_NOT;
-				g_eDuckType[id] = IS_DUCK_NOT;
-				g_eWhichJump[id] = jt_Not;
-				g_iDucks[id] = 0;
-				g_iJumps[id] = 0;
-				g_flDuckFirstZ[id] = 0.0;
-				g_flJumpFirstZ[id] = 0.0;
-
-				g_isTouched[id] = false;
-
-				g_ePreStats[id][ptBackWards] = false;
-				g_eFailJump[id] = fj_good;
-				g_iDetectHJ[id] = 0;
-				g_eJumpstats[id][js_iJumpBlock] = 1000;
-				g_eJumpstats[id][js_iFrames] = 0;
-				g_iStrafes[id] = 0;
-				g_eJumpstats[id][js_flJof] = 0.0;
-				g_isLadderBhop[id] = false;
-
-				g_bCheckFrames[id] = false;
-				for (new i = 0; i < NSTRAFES; i++) {
-					g_iStrButtonsInfo[id][i] = bi_not;
-				}
+				reset_stats(id);
 			}
 		}
 
@@ -114,32 +94,13 @@ public rgPM_Move(id) {
 			g_ePreStats[id][ptBackWards] = false;
 		}
 
-		if (iFog > 10) {
-			g_isFalling[id] = false;
-			g_iVerInfo[id] = IS_MIDDLE;
-			g_eJumpType[id] = IS_JUMP_NOT;
-			g_eDuckType[id] = IS_DUCK_NOT;
-			g_eWhichJump[id] = jt_Not;
-			g_iDucks[id] = 0;
-			g_iJumps[id] = 0;
-			g_flDuckFirstZ[id] = 0.0;
-			g_flJumpFirstZ[id] = 0.0;
+		static bool:bOneReset;
 
-			g_isTouched[id] = false;
-
-			g_ePreStats[id][ptBackWards] = false;
-			g_eFailJump[id] = fj_good;
-			g_iDetectHJ[id] = 0;
-			g_eJumpstats[id][js_iJumpBlock] = 1000;
-			g_eJumpstats[id][js_iFrames] = 0;
-			g_iStrafes[id] = 0;
-			g_eJumpstats[id][js_flJof] = 0.0;
-			g_isLadderBhop[id] = false;
-
-			g_bCheckFrames[id] = false;
-			for (new i = 0; i < NSTRAFES; i++) {
-				g_iStrButtonsInfo[id][i] = bi_not;
-			}
+		if (iFog > 10 && !bOneReset) {
+			reset_stats(id);
+			bOneReset = true;
+		} else {
+			bOneReset = false;
 		}
 	} else {
 		if (g_eWhichJump[id] != jt_Not && !g_eFailJump[id]) {
@@ -152,6 +113,8 @@ public rgPM_Move(id) {
 		if (g_isOldGround[id]) {
 			new bool:isDuck = !g_bInDuck[id] && !(g_iButtons[id] & IN_JUMP) && g_iPrevButtons[id] & IN_DUCK;
 			new bool:isJump = !isDuck && g_iButtons[id] & IN_JUMP && !(g_iPrevButtons[id] & IN_JUMP);
+
+			reset_strafes(id);
 
 			if (g_bPrevLadder[id]) {
 				in_ladder(id, isJump);
@@ -307,16 +270,11 @@ public rgPM_AirMove(id) {
 }
 
 public client_connect(id) {
-	client_cmd(id, "gl_vsync 0");
-
 	g_eOnOff[id][of_bChatInfo] = true;
 	g_eOnOff[id][of_bStrafe] = true;
 	g_eOnOff[id][of_bJof] = true;
 	g_eOnOff[id][of_bSpeed] = true;
 	g_eOnOff[id][of_bPre] = true;
 
-	g_bCheckFrames[id] = false;
-	g_ePreStats[id][ptBackWards] = false;
-	g_isTouched[id] = false;
-	g_eOnOff[id][of_bStats] = true;
+	reset_stats(id)
 }
