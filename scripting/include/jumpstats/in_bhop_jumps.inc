@@ -13,6 +13,7 @@ public in_bhop_js(id, iFog) {
 	}
 
 	g_iStrOldButtons[id] = 0;
+	
 	if (iFog > 10)
 	{
 		g_iJumps[id] = 0;
@@ -44,7 +45,7 @@ public in_bhop_js(id, iFog) {
 		g_flFirstJump[id][2] = g_bPrevInDuck[id] ? g_flFirstJump[id][2] + 18.0 : g_flFirstJump[id][2];
 
 		if (g_eDuckType[id] != IS_DUCK_NOT && g_iDucks[id]) {
-			if (g_iVerInfo[id] == IS_MIDDLE) {
+			if (g_iVerInfo[id] == IS_MIDDLE && !g_isFalling[id]) {
 				new Float:flDuckZ = g_bPrevInDuck[id] ? g_flPrevOrigin[id][2] + 18.0 : g_flPrevOrigin[id][2]; 
 
 				if (flDuckZ - g_flDuckFirstZ[id] < -4.0) {
@@ -54,23 +55,19 @@ public in_bhop_js(id, iFog) {
 				}
 			}
 
+			g_isFalling[id] =  false;
+
 			if (g_eDuckType[id] == IS_SGS) {
-				if (g_iDucks[id] == 1) {
-					g_eWhichJump[id] = jt_StandUPCountJump;
-				} else {
-					g_eWhichJump[id] = jt_Multi_StandUPCountJump;
-				}
+				g_eWhichJump[id] = g_iDucks[id] == 1 ? jt_StandUPCountJump : jt_Multi_StandUPCountJump;
 
 				g_eJumpType[id] = IS_JUMP;
+
 				show_pre(id, pre_sbj, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
 			} else if (g_eDuckType[id] == IS_DD || g_eDuckType[id] == IS_DUCK) {
-				if (g_iDucks[id] == 1) {
-					g_eWhichJump[id] = jt_CountJump;
-				} else {
-					g_eWhichJump[id] =  jt_Multi_CountJump;
-				}
+				g_eWhichJump[id] = g_iDucks[id] == 1 ? jt_StandUPCountJump : jt_Multi_StandUPCountJump;
 
 				g_eJumpType[id] = IS_JUMP;
+
 				show_pre(id, pre_sbj, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
 			}
 		} else {

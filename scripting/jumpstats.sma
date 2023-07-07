@@ -1,11 +1,10 @@
 #include <jumpstats/index>
 
 // Фиксить
-// после wj дд
 // Ладдер (срейфы)
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.2.4", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.2.5", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -74,11 +73,8 @@ public rgPM_Move(id) {
 
 		if (iFog == 1) {
 			if (g_bInDuck[id]) {
-				if (g_eDuckType[id] != IS_DUCK_NOT) {
-					g_eDuckType[id] = IS_SGS;
-				} else if (g_eJumpType[id] != IS_JUMP_NOT && g_eJumpType[id] != IS_DUCKBHOP) {
-					g_eJumpType[id] = IS_SBJ;
-				}
+				g_eDuckType[id] = g_eDuckType[id] != IS_DUCK_NOT ? IS_SGS : g_eDuckType[id];
+				g_eJumpType[id] = g_eJumpType[id] != IS_JUMP_NOT && g_eJumpType[id] != IS_DUCKBHOP ? IS_SBJ : g_eJumpType[id];
 			}
 		}
 
@@ -153,14 +149,6 @@ public rgPM_Move(id) {
 			}
 		}
 
-		if (g_eWhichJump[id] != jt_Not) {
-			g_isTouched[id] = get_pmove(pm_numtouch) ? true : g_isTouched[id];
-
-			if (g_eWhichJump[id] == jt_LongJump) {
-				detect_hj(id, g_flOrigin[id], g_flFirstJump[id][2]);
-			}
-		}
-
 		g_flLandTime[id] = get_gametime();
 		iFog = 0;
 	}
@@ -195,6 +183,13 @@ public rgPM_AirMove(id) {
 
 	new Float:flAngles[3]; get_entvar(id, var_angles, flAngles);
 	static Float:flOldAngle;
+
+
+	g_isTouched[id] = get_pmove(pm_numtouch) ? true : g_isTouched[id];
+
+	if (g_eWhichJump[id] == jt_LongJump) {
+		detect_hj(id, g_flOrigin[id], g_flFirstJump[id][2]);
+	}
 
 	new bool:isTurningLeft;
 	new bool:isTurningRight;

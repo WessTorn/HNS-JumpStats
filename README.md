@@ -2,7 +2,7 @@
 
 # ВНИМАНИЕ! Статистика находится на стадии бета-теста, есть баги.
 
-# HNSJumpstasts
+# HNS-JumpStats
 
 Hide'n'Seek статистика прыжков для Counter-Strike 1.6
 
@@ -20,10 +20,18 @@ Hide'n'Seek статистика прыжков для Counter-Strike 1.6
 - Multi CountJump (Drop / Up)
 - Stand-Up CountJump (Drop / Up)
 - Multi Stand-Up CountJump (Drop / Up)
-- BhopJump
-- Stand-Up BhopJump
-- BhopInDuck
-- DuckBhop
-- WeirdJump
+- BhopJump (Ladder / Drop / Up)
+- Stand-Up BhopJump (Ladder / Drop / Up)
+- BhopInDuck (Ladder / Drop / Up)
+- DuckBhop (Ladder / Drop / Up)
 - LadderJump
-- LadderBhop
+
+## Спасибки
+
+[borjomi](https://forums.alliedmods.net/showthread.php?t=141586) - Надеюсь живой, использую алгоритмы uq_jumpstats
+
+[ufame](https://github.com/ufame) - Мой ментор, наставил меня на верный путь.
+
+[Kpoluk](https://github.com/Kpoluk) - Просто гений, вдохновлялся его kz-rush статистикой, использую его основные алгоритмы.
+
+[Garey](https://github.com/Garey27) - Это бренд.

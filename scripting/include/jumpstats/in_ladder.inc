@@ -22,21 +22,13 @@ public in_ladder(id, bool:isJump) {
 	if (isJump) {
 		show_pre(id, pre_ladder_jump, g_flHorSpeed[id]);
 	} else {
-		g_isLadderBhop[id] = true;
-
 		g_eWhichJump[id] = jt_LadderJump;
 
 		g_flFirstJump[id][2] = g_flLadderXYZ[id][2] + 35.031250;
 
-		if (g_flLadderSize[id][0] <= g_flLadderSize[id][1]) {
-			g_flLadderDist[id] = g_flLadderSize[id][0] + 0.03125;
-		} else if (g_flLadderSize[id][0] > g_flLadderSize[id][1]) {
-			g_flLadderDist[id] = g_flLadderSize[id][1] + 0.03125;
-		}
+		g_flLadderDist[id] = (g_flLadderSize[id][0] <= g_flLadderSize[id][1] ?  g_flLadderSize[id][0] : g_flLadderSize[id][1]) + 0.03125;
 
-		if (g_flLadderDist[id] > 10) {
-			g_flLadderDist[id] = 4.0;
-		}
+		g_flLadderDist[id] = g_flLadderDist[id] > 10 ? 4.0 : g_flLadderDist[id];
 		
 		show_pre(id, pre_ladder, g_flHorSpeed[id]);
 	}
