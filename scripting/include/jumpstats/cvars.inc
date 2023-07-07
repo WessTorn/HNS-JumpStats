@@ -1,4 +1,5 @@
 enum JS_CVAR {
+	c_szPrefix[24],
 	c_iStatsR,
 	c_iStatsG,
 	c_iStatsB,
@@ -25,6 +26,8 @@ enum JS_CVAR {
 new g_pCvar[JS_CVAR];
 
 init_cvars() {
+	bind_pcvar_string(register_cvar("js_prefix", "Jump"),	g_pCvar[c_szPrefix], charsmax(g_pCvar[c_szPrefix]));
+
 	bind_pcvar_num(register_cvar("js_stats_red", "0"),		g_pCvar[c_iStatsR]);
 	bind_pcvar_num(register_cvar("js_stats_green", "200"),	g_pCvar[c_iStatsG]);
 	bind_pcvar_num(register_cvar("js_stats_blue", "60"),		g_pCvar[c_iStatsB]);

@@ -4,7 +4,7 @@
 // Ладдер (срейфы)
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.2.5", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.2.6", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -48,7 +48,7 @@ public rgPM_Move(id) {
 		g_isUserSpec[i] = is_user_spectating_player(i, id);
 	}
 
-	if (g_eOnOff[id][of_bSpeed])
+	if (g_eOnOff[id][of_bSpeed] || g_eOnOff[id][of_bJof] || g_eOnOff[id][of_bPre])
 		show_prespeed(id);
 
 	if (isGound) {

@@ -10,7 +10,7 @@ enum JS_ONOFF {
 new g_eOnOff[MAX_PLAYERS + 1][JS_ONOFF];
 
 public init_cmds() {
-	RegisterSayCmd("ljsmenu", "ljs",		"cmdLjsmenu",			ADMIN_ALL, "Jump stats menu");
+	RegisterSayCmd("ljsmenu", "ljs",		"cmdLjsmenu",		ADMIN_ALL, "Jump stats menu");
 	RegisterSayCmd("strafe", "strafestats",	"cmdShowStrafe",	ADMIN_ALL, "Show strafe stats");
 	RegisterSayCmd("stats", "ljstats",		"cmdShowStats",		ADMIN_ALL, "Show main stats");
 	RegisterSayCmd("chatinfo", "ci",		"cmdShowChatInfo",	ADMIN_ALL, "Show jump chat onfo");
@@ -20,73 +20,50 @@ public init_cmds() {
 }
 
 public cmdShowChatInfo(id) {
-	if (!g_eOnOff[id][of_bChatInfo]) {
-		g_eOnOff[id][of_bChatInfo] = true;
-		client_print_color(id, print_team_blue, ">> Chatinfo: ^3enabled");
-	} else {
-		g_eOnOff[id][of_bChatInfo] = false;
-		client_print_color(id, print_team_red, ">> Chatinfo: ^3disabled");
-	}
+	g_eOnOff[id][of_bChatInfo] = !g_eOnOff[id][of_bChatInfo];
+
+	client_print_color(id, print_team_blue, "[^3%s^1] Chatinfo: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bChatInfo] ? "enabled" : "disabled");
+	
 	return PLUGIN_HANDLED;
 }
 
 public cmdShowStats(id) {
-	if (g_eOnOff[id][of_bStats] == true) {
-		client_print_color(id, print_team_red, ">> Stats: ^3disabled");
-		g_eOnOff[id][of_bStats] = false;
-		g_eOnOff[id][of_bChatInfo] = false;
-	} else {
-		if (g_eOnOff[id][of_bStrafe] == false) {
-			g_eOnOff[id][of_bStrafe] = true;
-		}
-		g_eOnOff[id][of_bStats] = true;
-		g_eOnOff[id][of_bChatInfo] = true;
-		client_print_color(id, print_team_blue, ">> Stats: ^3enabled");
-	}
+	g_eOnOff[id][of_bStats] = !g_eOnOff[id][of_bStats];
+
+	client_print_color(id, print_team_blue, "[^3%s^1] Stats: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bStats] ? "enabled" : "disabled");
+
 	return PLUGIN_HANDLED;
 }
 
 public cmdShowStrafe(id) {
-	if (g_eOnOff[id][of_bStrafe] == true) {
-		client_print_color(id, print_team_red, ">> Strafe stats: ^3disabled");
-		g_eOnOff[id][of_bStrafe] = false;
-	} else {
-		g_eOnOff[id][of_bStrafe] = true;
-		client_print_color(id, print_team_blue, ">> Strafe stats: ^3enabled");
-	}
+	g_eOnOff[id][of_bStrafe] = !g_eOnOff[id][of_bStrafe];
+
+	client_print_color(id, print_team_blue, "[^3%s^1] Strafe stats: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bStrafe] ? "enabled" : "disabled");
+
 	return PLUGIN_HANDLED;
 }
 
 public cmdShowJof(id) {
-	if (g_eOnOff[id][of_bJof] == false) {
-		client_print_color(id, print_team_blue, ">> JumpOff: ^3enabled");
-		g_eOnOff[id][of_bJof] = true;
-	} else {
-		g_eOnOff[id][of_bJof] = false;
-		client_print_color(id, print_team_red, ">> JumpOff: ^3disabled");
-	}
+	g_eOnOff[id][of_bJof] = !g_eOnOff[id][of_bJof];
+
+	client_print_color(id, print_team_blue, "[^3%s^1] JumpOff: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bJof] ? "enabled" : "disabled");
+
 	return PLUGIN_HANDLED;
 }
 
 public cmdShowSpeed(id) {
-	if (g_eOnOff[id][of_bSpeed] == false) {
-		client_print_color(id, print_team_blue, ">> Speed: ^3enabled");
-		g_eOnOff[id][of_bSpeed] = true;
-	} else {
-		g_eOnOff[id][of_bSpeed] = false;
-		client_print_color(id, print_team_red, ">> Speed: ^3disabled");
-	}
+	g_eOnOff[id][of_bSpeed] = !g_eOnOff[id][of_bSpeed];
+
+	client_print_color(id, print_team_blue, "[^3%s^1] Speed: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bSpeed] ? "enabled" : "disabled");
+
 	return PLUGIN_HANDLED;
 }
 
 public cmdShowPre(id) {
-	if (g_eOnOff[id][of_bPre] == false) {
-		client_print_color(id, print_team_blue, ">> Pre: ^3enabled");
-		g_eOnOff[id][of_bPre] = true;
-	} else {
-		g_eOnOff[id][of_bPre] = false;
-		client_print_color(id, print_team_red, ">> Pre: ^3disabled");
-	}
+	g_eOnOff[id][of_bPre] = !g_eOnOff[id][of_bPre];
+
+	client_print_color(id, print_team_blue, "[^3%s^1] Pre: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bPre] ? "enabled" : "disabled");
+
 	return PLUGIN_HANDLED;
 }
 

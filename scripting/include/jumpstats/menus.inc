@@ -34,11 +34,10 @@ public cmdLjsmenu(id) {
 		menu_additem(hMenu, "Strafes stats - \dOff", "5");
 	}
 
-
 	if (g_eOnOff[id][of_bJof] == true) {
-		menu_additem(hMenu, "JumpOff - \yOn", "7", 0);
+		menu_additem(hMenu, "JumpOff - \yOn", "6");
 	} else {
-		menu_additem(hMenu, "JumpOff - \dOff", "7", 0);
+		menu_additem(hMenu, "JumpOff - \dOff", "6");
 	}
 
 	menu_display(id, hMenu);
@@ -47,36 +46,32 @@ public cmdLjsmenu(id) {
 }
 
 public ljsmenuHandler(id, hMenu, item) {
-	if (item == MENU_EXIT) {
+	if (!is_user_connected(id) || item == MENU_EXIT) {
 		return PLUGIN_HANDLED;
 	}
 
-	new szData[6], szName[64], iAccess, iCallback;
-	menu_item_getinfo(hMenu, item, iAccess, szData, charsmax(szData), szName, charsmax(szName), iCallback);
-
-	new iKey = str_to_num(szData);
-	switch (iKey) {
-		case 1: {
+	switch (item) {
+		case 0: {
 			cmdShowSpeed(id);
 			cmdLjsmenu(id);
 		}
-		case 2: {
+		case 1: {
 			cmdShowPre(id);
 			cmdLjsmenu(id);
 		}
-		case 3: {
+		case 2: {
 			cmdShowStats(id);
 			cmdLjsmenu(id);
 		}
-		case 4: {
+		case 3: {
 			cmdShowChatInfo(id);
 			cmdLjsmenu(id);
 		}
-		case 5: {
+		case 4: {
 			cmdShowStrafe(id);
 			cmdLjsmenu(id);
 		}
-		case 6: {
+		case 5: {
 			cmdShowJof(id);
 			cmdLjsmenu(id);
 		}
