@@ -1,13 +1,11 @@
 #include <jumpstats/index>
 
 // Фиксить
-// eff
-// pre sbj
 // после wj дд
 // Ладдер (срейфы)
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.2.3", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.2.4", "WessTorn");
 
 	init_cvars();
 	init_cmds();

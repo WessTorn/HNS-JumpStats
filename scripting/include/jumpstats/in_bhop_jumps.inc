@@ -61,7 +61,7 @@ public in_bhop_js(id, iFog) {
 					g_eWhichJump[id] = jt_Multi_StandUPCountJump;
 				}
 
-				g_eJumpType[id] = IS_JUMP_INDUCK;
+				g_eJumpType[id] = IS_JUMP;
 				show_pre(id, pre_sbj, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
 			} else if (g_eDuckType[id] == IS_DD || g_eDuckType[id] == IS_DUCK) {
 				if (g_iDucks[id] == 1) {
@@ -70,7 +70,7 @@ public in_bhop_js(id, iFog) {
 					g_eWhichJump[id] =  jt_Multi_CountJump;
 				}
 
-				g_eJumpType[id] = IS_JUMP_INDUCK;
+				g_eJumpType[id] = IS_JUMP;
 				show_pre(id, pre_sbj, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
 			}
 		} else {
@@ -116,6 +116,7 @@ public in_bhop_js(id, iFog) {
 						show_pre(id, pre_bhop, g_flPreHorSpeed[id], iFog, g_flHorSpeed[id]);
 					}
 				}
+				g_eJumpType[id] = IS_JUMP;
 			}
 		}
 		g_eJumpstats[id][js_flEndSpeed] = g_flHorSpeed[id];
