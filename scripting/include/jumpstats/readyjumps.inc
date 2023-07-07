@@ -42,8 +42,16 @@ public ready_jumps(id, Float:flFirstJump[3]) {
 	flOrigin = flFirstJump;
 
 	flOrigin[2] = g_bInDuck[id] ? (flOrigin[2] += 18.0) : flOrigin[2];
-	
-	g_eJumpstats[id][js_flDistance] = get_distance_f(g_flFirstJump[id], flOrigin) + 32.0;
+
+	if (g_eWhichJump[id] == jt_LadderJump) {
+		if (floatabs(g_flFirstJump[id][2] - flOrigin[2]) > 4.0) {
+			g_eFailJump[id] = fl_fail;
+		}
+
+		g_eJumpstats[id][js_flDistance] = get_distance_f(g_flFirstJump[id], flOrigin) + g_flLadderDist[id];
+	} else {
+		g_eJumpstats[id][js_flDistance] = get_distance_f(g_flFirstJump[id], flOrigin) + 32.0;
+	}
 
 	if (g_eWhichJump[id] != jt_LadderJump && g_eJumpstats[id][js_flDistance] > 64.0) {
 		g_eJumpstats[id][js_flLanding] = g_eJumpstats[id][js_flDistance] - (g_eJumpstats[id][js_iJumpBlock] + g_eJumpstats[id][js_flJof]);
@@ -355,7 +363,7 @@ public show_chat(id) {
 	new iLen;
 
 	if (g_eWhichJump[id] != jt_LadderJump && g_eJumpstats[id][js_iJumpBlock] < 290.0 && g_eJumpstats[id][js_iJumpBlock] > 200.0 && g_eJumpstats[id][js_flJof] < 100.0 && g_eJumpstats[id][js_flJof] != 0.0 && (g_eJumpstats[id][js_iJumpBlock] + g_eJumpstats[id][js_flJof]) < g_eJumpstats[id][js_flDistance]) {
-		iLen += format(szJumpInfoMess[iLen], sizeof szJumpInfoMess - iLen, " (block: ^3%d^1)");
+		iLen += format(szJumpInfoMess[iLen], sizeof szJumpInfoMess - iLen, " (block: ^3%d^1)", g_eJumpstats[id][js_iJumpBlock]);
 	}
 	
 	if (g_ePreStats[id][ptSideWays]) {

@@ -101,6 +101,7 @@ public in_bhop_js(id, iFog) {
 					} else if (g_isLadderBhop[id]) {
 						g_ePreStats[id][ptLadderBhop] = true;
 						g_isLadderBhop[id] = false;
+						g_iVerInfo[id] = IS_MIDDLE;
 					}
 				} else {
 					g_eWhichJump[id] = jt_Not;

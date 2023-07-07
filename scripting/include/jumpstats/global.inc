@@ -153,3 +153,8 @@ new g_isUserSpec[MAX_PLAYERS + 1];
 new g_hudStrafe;
 new g_hudStats;
 new g_hudPreSpeed;
+
+
+new Float:g_flLadderXYZ[MAX_PLAYERS + 1][3];
+new Float:g_flLadderSize[MAX_PLAYERS + 1][3];
+new Float:g_flLadderDist[MAX_PLAYERS + 1];

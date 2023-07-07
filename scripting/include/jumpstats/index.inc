@@ -1,7 +1,7 @@
 #include <amxmodx>
 #include <fakemeta>
-#include <hamsandwich>
 #include <reapi>
+#include <engine>
 
 #include <jumpstats/global>
 #include <jumpstats/cvars>

@@ -1,7 +1,13 @@
 #include <jumpstats/index>
 
+// Фиксить
+// eff
+// pre sbj
+// после wj дд
+// Ладдер (срейфы)
+
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.2.1", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.2.2", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -50,6 +56,16 @@ public rgPM_Move(id) {
 
 	if (isGound) {
 		iFog++;
+
+		if (isLadder) {
+			new iEnt[1];
+			find_sphere_class(id, "func_ladder", 18.0, iEnt, 1);
+
+			if (iEnt[0] != 0) {
+				get_entvar(iEnt[0], var_maxs, g_flLadderXYZ[id]);
+				get_entvar(iEnt[0], var_size, g_flLadderSize[id]);
+			}
+		}
 
 		if (!g_isOldGround[id]) {
 			g_flPreHorSpeed[id] = g_flHorSpeed[id];
