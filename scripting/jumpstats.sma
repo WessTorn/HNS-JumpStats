@@ -4,7 +4,7 @@
 // BackWards
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.2.8", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.3.0", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -168,6 +168,11 @@ public rgPM_AirMove(id) {
 		return HC_CONTINUE;
 	}
 
+	if (isUserSurfing(id)) {
+		reset_stats(id);
+		return HC_CONTINUE;
+	}
+
 	g_eJumpstats[id][js_iFrames]++;
 
 	new iButtons = get_ucmd(get_pmove(pm_cmd), ucmd_buttons);
@@ -270,11 +275,7 @@ public rgPM_AirMove(id) {
 }
 
 public client_connect(id) {
-	g_eOnOff[id][of_bChatInfo] = true;
-	g_eOnOff[id][of_bStrafe] = true;
-	g_eOnOff[id][of_bJof] = true;
-	g_eOnOff[id][of_bSpeed] = true;
-	g_eOnOff[id][of_bPre] = true;
+	arrayset(g_eOnOff[id], true, JS_ONOFF); // Ну потом
 
-	reset_stats(id)
+	reset_stats(id);
 }

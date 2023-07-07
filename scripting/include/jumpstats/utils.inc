@@ -305,3 +305,25 @@ public calc_jof_block(id, Float:flJumpOff[3]) {
 	}
 
 }
+
+stock bool:isUserSurfing(id) {
+	static Float:origin[3], Float:dest[3];
+	get_entvar(id, var_origin, origin);
+	
+	dest[0] = origin[0];
+	dest[1] = origin[1];
+	dest[2] = origin[2] - 1.0;
+
+	static Float:flFraction;
+
+	engfunc(EngFunc_TraceHull, origin, dest, 0, 
+		g_bInDuck[id] ? HULL_HEAD : HULL_HUMAN, id, 0);
+
+	get_tr2(0, TR_flFraction, flFraction);
+
+	if (flFraction >= 1.0) return false;
+	
+	get_tr2(0, TR_vecPlaneNormal, dest);
+
+	return dest[2] <= 0.7;
+} 

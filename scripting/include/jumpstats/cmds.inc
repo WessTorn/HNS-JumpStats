@@ -1,4 +1,4 @@
-enum JS_ONOFF {
+enum _:JS_ONOFF {
 	bool:of_bStrafe,
 	bool:of_bStats,
 	bool:of_bJof,
