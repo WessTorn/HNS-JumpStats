@@ -54,16 +54,16 @@ public in_bhop_js(id, iFog) {
 
 			if (g_eDuckType[id] == IS_SGS) {
 				g_eWhichJump[id] = g_iDucks[id] == 1 ? jt_StandUPCountJump : jt_Multi_StandUPCountJump;
+				
+				show_pre(id, g_eJumpType[id] == IS_SBJ ? pre_sbj : pre_bhop, g_flPreHorSpeed[id], iFog, g_flPrevHorSpeed[id]);
 
 				g_eJumpType[id] = IS_JUMP;
-
-				show_pre(id, pre_sbj, g_flPreHorSpeed[id], iFog, g_flPrevHorSpeed[id]);
 			} else if (g_eDuckType[id] == IS_DD || g_eDuckType[id] == IS_DUCK) {
 				g_eWhichJump[id] = g_iDucks[id] == 1 ? jt_CountJump : jt_Multi_CountJump;
 
+				show_pre(id, g_eJumpType[id] == IS_SBJ ? pre_sbj : pre_bhop, g_flPreHorSpeed[id], iFog, g_flPrevHorSpeed[id]);
+				
 				g_eJumpType[id] = IS_JUMP;
-
-				show_pre(id, pre_sbj, g_flPreHorSpeed[id], iFog, g_flPrevHorSpeed[id]);
 			}
 			g_flJumpFirstZ[id] = g_flPrevOrigin[id][2] + 18.0;
 		} else {
