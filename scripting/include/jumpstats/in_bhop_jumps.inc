@@ -27,6 +27,13 @@ public in_bhop_js(id, iFog) {
 		// ЖАМП
 	} else {
 		g_iJumps[id]++;
+
+		if (g_iJumps[id] >= NJUMPS) {
+			g_iJumps[id] = 3;
+			set_hudmessage(g_pCvar[c_iStatsR], g_pCvar[c_iStatsG], g_pCvar[c_iStatsB], g_pCvar[c_flStatsX], g_pCvar[c_flStatsY], 0, 6.0, 2.5, 0.1, 0.3, g_pCvar[c_iStats]);
+			ShowSyncHudMsg(id, g_hudStats, "Reset jumps!");
+		}
+
 		g_eJumpData[id][g_iJumps[id]][JUMP_PRE] = g_flPrevHorSpeed[id];
 		g_eJumpData[id][g_iJumps[id]][JUMP_FOG] = iFog;
 

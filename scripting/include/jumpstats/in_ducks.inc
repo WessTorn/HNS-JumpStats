@@ -14,6 +14,13 @@ public in_ducks(id, iFog) {
 		show_pre(id, pre_duck, g_flPrevHorSpeed[id]);
 	} else {
 		g_iDucks[id]++;
+
+		if (g_iDucks[id] >= NDUCKS) {
+			g_iDucks[id] = 2;
+			set_hudmessage(g_pCvar[c_iStatsR], g_pCvar[c_iStatsG], g_pCvar[c_iStatsB], g_pCvar[c_flStatsX], g_pCvar[c_flStatsY], 0, 6.0, 2.5, 0.1, 0.3, g_pCvar[c_iStats]);
+			ShowSyncHudMsg(id, g_hudStats, "Reset ducks!");
+		}
+
 		g_eDuckData[id][g_iDucks[id]][DUCK_PRE] = g_flPrevHorSpeed[id];
 		g_eDuckData[id][g_iDucks[id]][DUCK_FOG] = iFog;
 

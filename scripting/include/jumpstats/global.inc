@@ -1,4 +1,6 @@
 #define NSTRAFES 14
+#define NDUCKS 100
+#define NJUMPS 100
 
 enum JumpType {
 	jt_LongJump = 0,
@@ -81,7 +83,7 @@ enum _:STATS_DUCKS {
 	DUCK_FOG
 };
 
-new g_eDuckData[MAX_PLAYERS + 1][100][STATS_DUCKS];
+new g_eDuckData[MAX_PLAYERS + 1][NDUCKS][STATS_DUCKS];
 new g_iDucks[MAX_PLAYERS + 1];
 
 enum JUMP_DATA {
@@ -99,7 +101,7 @@ enum _:STATS_JUMPS {
 	JUMP_FOG
 };
 
-new g_eJumpData[MAX_PLAYERS + 1][100][STATS_JUMPS];
+new g_eJumpData[MAX_PLAYERS + 1][NJUMPS][STATS_JUMPS];
 new g_iJumps[MAX_PLAYERS + 1];
 
 enum FAIL_JUMP {

@@ -13,13 +13,13 @@ stock reset_stats(id) {
 	g_flJumpFirstZ[id] = 0.0;
 
 	g_eDuckType[id] = IS_DUCK_NOT;
-	for (new i = 0; i < 100; i++) {
+	for (new i = 0; i < NDUCKS; i++) {
    		arrayset(g_eDuckData[id][i], 0, STATS_DUCKS);
 	}
 	g_iDucks[id] = 0;
 
 	g_eJumpType[id] = IS_JUMP_NOT;
-	for (new i = 0; i < 100; i++) {
+	for (new i = 0; i < NJUMPS; i++) {
    		arrayset(g_eJumpData[id][i], 0, STATS_JUMPS);
 	}
 	g_iJumps[id] = 0;

@@ -3,7 +3,7 @@
 // Переписать весь drop / up
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.3.4", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.3.6", "WessTorn");
 
 	init_cvars();
 	init_cmds();

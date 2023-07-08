@@ -96,7 +96,7 @@ public ready_jumps(id, JumpType:eJump, Float:flEndJump[3]) {
 	reset_strafes(id);
 
 	g_eDuckType[id] = IS_DUCK_NOT;
-	for (new i = 0; i < 100; i++) {
+	for (new i = 0; i < NDUCKS; i++) {
    		arrayset(g_eDuckData[id][i], 0, STATS_DUCKS);
 	}
 	g_iDucks[id] = 0;
