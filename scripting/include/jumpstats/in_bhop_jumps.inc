@@ -1,5 +1,10 @@
 public in_bhop_js(id, iFog) {
 	g_flFirstJump[id] = g_flPrevOrigin[id];
+	if (iFog == 1) {
+		g_flPrevHorSpeed[id] = g_flHorSpeed[id]
+	}
+
+	g_eJumpstats[id][js_flEndSpeed] = g_flPrevHorSpeed[id];
 	
 	if (iFog > 10) {
 		g_iJumps[id] = 0;
@@ -15,7 +20,6 @@ public in_bhop_js(id, iFog) {
 		} else {
 			g_eJumpType[id] = IS_JUMP;
 			g_eWhichJump[id] = jt_LongJump;
-			g_eJumpstats[id][js_flEndSpeed] = g_flPrevHorSpeed[id];
 			g_flJumpFirstZ[id] = g_flPrevOrigin[id][2];
 		}
 
@@ -27,10 +31,6 @@ public in_bhop_js(id, iFog) {
 		g_eJumpData[id][g_iJumps[id]][JUMP_FOG] = iFog;
 
 		g_flFirstJump[id][2] = g_bPrevInDuck[id] ? g_flFirstJump[id][2] + 18.0 : g_flFirstJump[id][2];
-
-		if (!g_flJumpFirstZ[id]) {
-			g_flJumpFirstZ[id] = g_bPrevInDuck[id] ? g_flFirstJump[id][2] + 18.0 : g_flFirstJump[id][2];
-		}
 
 		if (g_eDuckType[id] != IS_DUCK_NOT && g_iDucks[id]) {
 			if (g_iVerInfo[id] == IS_MIDDLE && !g_isFalling[id]) {
@@ -58,6 +58,7 @@ public in_bhop_js(id, iFog) {
 
 				show_pre(id, pre_sbj, g_flPreHorSpeed[id], iFog, g_flPrevHorSpeed[id]);
 			}
+			g_flJumpFirstZ[id] = g_flPrevOrigin[id][2] + 18.0;
 		} else {
 			if (g_eJumpType[id] != IS_JUMP_NOT) {
 				if (g_iJumps[id] <= 2) {
@@ -104,7 +105,6 @@ public in_bhop_js(id, iFog) {
 				g_eJumpType[id] = IS_JUMP;
 			}
 		}
-		g_eJumpstats[id][js_flEndSpeed] = g_flPrevHorSpeed[id];
 		// БХОП
 	}
 }

@@ -29,7 +29,6 @@ stock reset_stats(id) {
 	arrayset(g_flFirstJump[id], 0.0, 3);
 	
 	g_isLadderBhop[id] = false;
-	g_bCheckFrames[id] = false;
 	g_isFalling[id] = false;
 	g_isTouched[id] = false;
 

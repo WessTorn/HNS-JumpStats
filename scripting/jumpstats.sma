@@ -1,9 +1,9 @@
 #include <jumpstats/index>
 
-// Фикс бхоп дроп/ап
+// Переписать весь drop / up
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.3.3", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.3.4", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -67,15 +67,12 @@ public rgPM_Move(id) {
 				get_entvar(iEnt[0], var_size, g_flLadderSize[id]);
 			}
 
-			if (g_eWhichJump[id] != jt_Not) {
-				reset_stats(id);
-			}
 		}
 
 		if (!g_isOldGround[id]) {
 			g_flPreHorSpeed[id] = g_flHorSpeed[id];
 			if (g_eWhichJump[id] != jt_Not) {
-				ready_jumps(id, g_flOrigin[id]);
+				ready_jumps(id, g_eWhichJump[id], g_flOrigin[id]);
 			}
 		}
 
@@ -104,8 +101,8 @@ public rgPM_Move(id) {
 	} else {
 		if (g_eWhichJump[id] != jt_Not && !g_eFailJump[id]) {
 			if ((g_bInDuck[id] ? (g_flOrigin[id][2] + 18.0) : g_flOrigin[id][2]) - g_flFirstJump[id][2] < 0) {
-				g_eFailJump[id] = fj_fail;
-				ready_jumps(id, g_flPrevOrigin[id]);
+				g_eFailJump[id] = g_eWhichJump[id] == jt_LadderJump ? fj_notshow : fj_fail;
+				ready_jumps(id, g_eWhichJump[id], g_flPrevOrigin[id]);
 			}
 		}
 
@@ -171,7 +168,13 @@ public rgPM_AirMove(id) {
 		return HC_CONTINUE;
 	}
 
-	g_eJumpstats[id][js_iFrames]++;
+	if (g_eWhichJump[id] == jt_LongJump) {
+		detect_hj(id, g_flOrigin[id], g_flFirstJump[id][2]);
+	}
+
+	if (g_iStrafes[id] >= NSTRAFES) {
+		return HC_CONTINUE;
+	}
 
 	new iButtons = get_ucmd(get_pmove(pm_cmd), ucmd_buttons);
 
@@ -182,9 +185,7 @@ public rgPM_AirMove(id) {
 	new Float:flAngles[3]; get_entvar(id, var_angles, flAngles);
 	static Float:flOldAngle;
 
-	if (g_eWhichJump[id] == jt_LongJump) {
-		detect_hj(id, g_flOrigin[id], g_flFirstJump[id][2]);
-	}
+	g_eJumpstats[id][js_iFrames]++;
 
 	new bool:isTurningLeft;
 	new bool:isTurningRight;
@@ -201,39 +202,26 @@ public rgPM_AirMove(id) {
 	}
 
 	if (iButtons & IN_MOVELEFT && !(g_iStrOldButtons[id] & IN_MOVELEFT) && !(iButtons & IN_MOVERIGHT) && !(iButtons & IN_BACK) && !(iButtons & IN_FORWARD) && (isTurningLeft || isTurningRight)) {
-		g_iStrafes[id] += 1;
-
-		if (g_iStrafes[id] > 0 && g_iStrafes[id] < 100) {
-			g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_A;
-		}
+		g_iStrafes[id]++;
+		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_A;
 	} else if (iButtons & IN_MOVERIGHT && !(g_iStrOldButtons[id] & IN_MOVERIGHT) && !(iButtons & IN_MOVELEFT) && !(iButtons & IN_BACK) && !(iButtons & IN_FORWARD) && (isTurningLeft || isTurningRight)) {
-		g_iStrafes[id] += 1;
-
-		if (g_iStrafes[id] > 0 && g_iStrafes[id] < 100) {
-			g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_D;
-		}
+		g_iStrafes[id]++;
+		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_D;
 	} else if (iButtons & IN_BACK && !(g_iStrOldButtons[id] & IN_BACK) && !(iButtons & IN_MOVELEFT) && !(iButtons & IN_MOVERIGHT) && !(iButtons & IN_FORWARD) && (isTurningLeft || isTurningRight)) {
-		g_iStrafes[id] += 1;
-
-		if (g_iStrafes[id] > 0 && g_iStrafes[id] < 100) {
-			g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_S;
-		}
+		g_iStrafes[id]++;
+		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_S;
 	} else if (iButtons & IN_FORWARD && !(g_iStrOldButtons[id] & IN_FORWARD) && !(iButtons & IN_MOVELEFT) && !(iButtons & IN_MOVERIGHT) && !(iButtons & IN_BACK) && (isTurningLeft || isTurningRight)) {
-		g_iStrafes[id] += 1;
-
-		if (g_iStrafes[id] > 0 && g_iStrafes[id] < 100) {
-			g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_W;
-		}
+		g_iStrafes[id]++;
+		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_W;
 	}
 
 	if (iButtons & IN_MOVERIGHT || iButtons & IN_MOVELEFT || iButtons & IN_FORWARD || iButtons & IN_BACK) {
-		if (g_iStrafes[id] < NSTRAFES) {
-			if (flStrSpeed > g_flHorSpeed[id]) {
-				g_eStrafeStats[id][g_iStrafes[id]][st_flSyncGood] += 1;
-			} else {
-				g_eStrafeStats[id][g_iStrafes[id]][st_flSyncBad] += 1;
-			}
+		if (flStrSpeed > g_flHorSpeed[id]) {
+			g_eStrafeStats[id][g_iStrafes[id]][st_iFrameGood] += 1;
+		} else {
+			g_eStrafeStats[id][g_iStrafes[id]][st_iFrameBad] += 1;
 		}
+		g_eStrafeStats[id][g_iStrafes[id]][st_iFrame] += 1;
 
 	}
 	if ((iButtons & IN_MOVERIGHT && (iButtons & IN_MOVELEFT || iButtons & IN_FORWARD || iButtons & IN_BACK))
@@ -244,23 +232,16 @@ public rgPM_AirMove(id) {
 	else if (isTurningLeft || isTurningRight)
 		g_iStrOldButtons[id] = iButtons;
 
-	if (g_flHorSpeed[id] > g_eJumpstats[id][js_flEndSpeed]) {
-		if (g_iStrafes[id] < NSTRAFES) {
-			g_eStrafeStats[id][g_iStrafes[id]][st_flSpeed] += g_flHorSpeed[id] - g_eJumpstats[id][js_flEndSpeed];
-		}
-		g_eJumpstats[id][js_flEndSpeed] = g_flHorSpeed[id];
+	if (flStrSpeed > g_eJumpstats[id][js_flEndSpeed]) {
+		g_eStrafeStats[id][g_iStrafes[id]][st_flSpeed] += flStrSpeed - g_eJumpstats[id][js_flEndSpeed];
+		g_eJumpstats[id][js_flEndSpeed] = flStrSpeed;
 	}
 
-	if ((g_flHorSpeed[id] < g_flTempSpeed[id]) && (g_iStrafes[id] < NSTRAFES)) {
-		g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] += g_flTempSpeed[id] - g_flHorSpeed[id];
-		if (g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] > 5) {
-			g_bCheckFrames[id] = true;
-		}
+	if (flStrSpeed < g_flTempSpeed[id]) {
+		g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] += g_flTempSpeed[id] - flStrSpeed;
 	}
 
-	g_eStrafeStats[id][g_iStrafes[id]][st_iFrame] += 1;
-
-	g_flTempSpeed[id] = g_flHorSpeed[id];
+	g_flTempSpeed[id] = flStrSpeed;
 
 	flOldAngle = flAngles[1];
 

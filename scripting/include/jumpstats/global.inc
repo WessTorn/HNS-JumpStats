@@ -43,17 +43,17 @@ enum _:buttons_info {
 };
 
 new g_szStrButtonsName[buttons_info][] = { "err", "W", "A", "S", "D" };
-new g_iStrButtonsInfo[MAX_PLAYERS + 1][100];
+new g_iStrButtonsInfo[MAX_PLAYERS + 1][NSTRAFES];
 
 enum _:StrafeStats {
 	Float:st_flSpeed,
 	Float:st_flSpeedFail,
-	st_flSyncGood,
-	st_flSyncBad,
+	st_iFrameGood,
+	st_iFrameBad,
 	st_iFrame,
 };
 
-new g_eStrafeStats[MAX_PLAYERS + 1][14][StrafeStats];
+new g_eStrafeStats[MAX_PLAYERS + 1][NSTRAFES][StrafeStats];
 new g_iStrafes[MAX_PLAYERS + 1];
 new g_iStrOldButtons[MAX_PLAYERS + 1];
 
@@ -140,8 +140,6 @@ new Float:g_flLadderDist[MAX_PLAYERS + 1];
 
 new bool:g_isFalling[MAX_PLAYERS + 1];
 new bool:g_isTouched[MAX_PLAYERS + 1];
-
-new bool:g_bCheckFrames[MAX_PLAYERS + 1];
 
 new Float:g_flTempSpeed[MAX_PLAYERS + 1];
 
