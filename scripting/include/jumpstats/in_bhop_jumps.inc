@@ -28,6 +28,9 @@ public in_bhop_js(id, iFog) {
 	} else {
 		g_iJumps[id]++;
 
+		if (!g_flJumpFirstZ[id])
+			g_flJumpFirstZ[id] = g_bPrevInDuck[id] ? g_flPrevOrigin[id][2] + 18.0 : g_flPrevOrigin[id][2]; 
+
 		if (g_iJumps[id] >= NJUMPS) {
 			g_iJumps[id] = 3;
 			set_hudmessage(g_pCvar[c_iStatsR], g_pCvar[c_iStatsG], g_pCvar[c_iStatsB], g_pCvar[c_flStatsX], g_pCvar[c_flStatsY], 0, 6.0, 2.5, 0.1, 0.3, g_pCvar[c_iStats]);
@@ -65,7 +68,6 @@ public in_bhop_js(id, iFog) {
 				
 				g_eJumpType[id] = IS_JUMP;
 			}
-			g_flJumpFirstZ[id] = g_flPrevOrigin[id][2] + 18.0;
 		} else {
 			if (g_eJumpType[id] != IS_JUMP_NOT) {
 				if (g_iJumps[id] <= 2) {

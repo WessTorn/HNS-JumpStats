@@ -100,6 +100,7 @@ public ready_jumps(id, JumpType:eJump, Float:flEndJump[3]) {
    		arrayset(g_eDuckData[id][i], 0, STATS_DUCKS);
 	}
 	g_iDucks[id] = 0;
+	g_flDuckFirstZ[id] = 0.0;
 
 	g_eJumpType[id] = IS_JUMP;
 

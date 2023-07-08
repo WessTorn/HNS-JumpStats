@@ -15,6 +15,10 @@ public in_ducks(id, iFog) {
 	} else {
 		g_iDucks[id]++;
 
+		if (!g_flDuckFirstZ[id]) {
+			g_flDuckFirstZ[id] = g_bPrevInDuck[id] ? g_flPrevOrigin[id][2] + 18.0 : g_flPrevOrigin[id][2];
+		}
+
 		if (g_iDucks[id] >= NDUCKS) {
 			g_iDucks[id] = 2;
 			set_hudmessage(g_pCvar[c_iStatsR], g_pCvar[c_iStatsG], g_pCvar[c_iStatsB], g_pCvar[c_flStatsX], g_pCvar[c_flStatsY], 0, 6.0, 2.5, 0.1, 0.3, g_pCvar[c_iStats]);

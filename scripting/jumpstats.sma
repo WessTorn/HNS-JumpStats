@@ -1,9 +1,7 @@
 #include <jumpstats/index>
 
-// Переписать весь drop / up
-
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.3.8", "WessTorn");
+	register_plugin("HNS JumpStats", "beta 0.3.9", "WessTorn");
 
 	init_cvars();
 	init_cmds();
