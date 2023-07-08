@@ -43,7 +43,8 @@ stock reset_strafes(id) {
 	}
 	
 	g_iStrafes[id] = 0;
-	g_flTempSpeed[id] = 0.0;
+	g_iStrAllEff[id] = 0;
+	g_flStrGain[id] = 0.0;
 }
 
 
@@ -85,25 +86,31 @@ enum _:ChatDist {
 	good = 0, pro, holy, leet, god
 };
 
-public get_colorchat_by_distance(id, aDistance[ChatDist], JumpType:iJumpType/*, Float:mSpeed*/) {
-	//new iTdist = floatround((250.0 - mSpeed) * 0.73, floatround_floor);
+public get_colorchat_by_distance(id, aDistance[ChatDist], JumpType:iJumpType) {
+	new bool:isSotka = bool:(get_movevar(mv_airaccelerate) > 10.0);
 
-	new aircj;
-	if (get_cvar_pointer("sv_airaccelerate") > 10) {
-		aircj = 10;
-	} else {
-		aircj = 0;
+	if (g_ePreStats[id][ptLadderBhop] && iJumpType == jt_BhopJump || iJumpType ==  jt_StandUpBhopJump || iJumpType ==  jt_BhopInDuck) {
+		aDistance[god] = isSotka ? 270 : 260;
+		aDistance[leet] = isSotka ? 265 : 255;
+		aDistance[holy] = isSotka ? 260 : 250;
+		aDistance[pro] = isSotka ? 255 : 245;
+		aDistance[good] = isSotka ? 250 : 240;
+
+
+
+		return PLUGIN_HANDLED;
 	}
+
 
 	switch (iJumpType) {
 		case jt_LongJump, jt_HighJump: {
-			aDistance[god] = 255;
-			aDistance[leet] = 253;
-			aDistance[holy] = 250;
-			aDistance[pro] = 245;
+			aDistance[god] = isSotka ? 260 : 255;
+			aDistance[leet] = isSotka ? 255 : 253;
+			aDistance[holy] = isSotka ? 250 : 250;
+			aDistance[pro] = 245
 			aDistance[good] = 240;
 		}
-		case jt_CountJump, jt_StandUPCountJump: {
+		case jt_CountJump, jt_StandUPCountJump, jt_WeirdJump: {
 			aDistance[god] = 270;
 			aDistance[leet] = 265;
 			aDistance[holy] = 260;
@@ -111,18 +118,11 @@ public get_colorchat_by_distance(id, aDistance[ChatDist], JumpType:iJumpType/*, 
 			aDistance[good] = 250;
 		}
 		case jt_Multi_CountJump, jt_Multi_StandUPCountJump: {
-			aDistance[god] = 262 + aircj;
-			aDistance[leet] = 257 + aircj;
-			aDistance[holy] = 255 + aircj;
-			aDistance[pro] = 250 + aircj;
-			aDistance[good] = 245 + aircj;
-		}
-		case jt_WeirdJump: { // ладдер бхоп
-			aDistance[god] = 272;
-			aDistance[leet] = 270;
-			aDistance[holy] = 265;
-			aDistance[pro] = 260;
-			aDistance[good] = 255;
+			aDistance[god] = isSotka ? 270 : 260;
+			aDistance[leet] = isSotka ? 265 : 255;
+			aDistance[holy] = isSotka ? 260 : 250;
+			aDistance[pro] = isSotka ? 255 : 245;
+			aDistance[good] = isSotka ? 250 : 240;
 		}
 		case jt_LadderJump: {
 			aDistance[god] = 190;
@@ -138,14 +138,7 @@ public get_colorchat_by_distance(id, aDistance[ChatDist], JumpType:iJumpType/*, 
 			aDistance[pro] = 235;
 			aDistance[good] = 230;
 		}
-		case jt_BhopInDuck: {
-			aDistance[god] = 220;
-			aDistance[leet] = 217;
-			aDistance[holy] = 215;
-			aDistance[pro] = 210;
-			aDistance[good] = 205;
-		}
-		case jt_DuckBhopJump: {
+		case jt_BhopInDuck, jt_DuckBhopJump: {
 			aDistance[god] = 220;
 			aDistance[leet] = 217;
 			aDistance[holy] = 215;
@@ -154,13 +147,7 @@ public get_colorchat_by_distance(id, aDistance[ChatDist], JumpType:iJumpType/*, 
 		}
 	}
 
-	if (g_ePreStats[id][ptLadderBhop]) {
-		aDistance[god] = 272;
-		aDistance[leet] = 270;
-		aDistance[holy] = 265;
-		aDistance[pro] = 260;
-		aDistance[good] = 255;
-	}
+	return PLUGIN_HANDLED;
 }
 
 

@@ -1,7 +1,5 @@
 ## [README in English](https://github.com/WessTorn/HNS-JumpStats/blob/main/README_ENG.md)
 
-# ВНИМАНИЕ! Статистика находится на стадии бета-теста, есть баги.
-
 # HNS-JumpStats
 
 Hide'n'Seek статистика прыжков для Counter-Strike 1.6
@@ -75,36 +73,36 @@ FOG (frames on the ground) - в двух словах, это кол-во frame 
 | Команда | Описание |
 | :-: | :-: |
 | ljsmenu / ljs | Главное меню |
-| strafe / strafestats | Показыть/скрыть статистику по стрейфам |
-| stats / ljstats | Показыть/скрыть основную статистику |
-| chatinfo / ci | Показыть/скрыть информацию о прыжках в чате |
-| showspeed / speed | Показыть/скрыть скорость (HUD) |
-| showpre / pre | Показыть/скрыть престрейфы (HUD) |
-| jumpoff / jof | Показыть/скрыть jof (HUD) |
+| strafe / strafestats | Показать/скрыть статистику по стрейфам |
+| stats / ljstats | Показать/скрыть основную статистику |
+| chatinfo / ci | Показать/скрыть информацию о прыжках в чате |
+| showspeed / speed | Показать/скрыть скорость (HUD) |
+| showpre / pre | Показать/скрыть престрейфы (HUD) |
+| jumpoff / jof | Показать/скрыть jof (HUD) |
 
 ## Квары
 
 | Cvar                 | Default    | Description |
 | :------------------- | :--------: | :--------: |
-| js_prefix | Jump |  |
-| js_stats_red | 0 |  |
-| js_stats_green | 200 |  |
-| js_stats_blue | 60 |  |
-| js_failstats_red | 200 |  |
-| js_failstats_green | 10 |  |
-| js_failstats_blue | 50 |  |
-| js_stats_x | -1.0 |  |
-| js_stats_y | 0.7 |  |
-| js_strafe_x | 0.7 |  |
-| js_strafe_y | 0.35 |  |
-| js_prespeed_red | 145 |  |
-| js_prespeed_green | 145 |  |
-| js_prespeed_blue | 145 |  |
-| js_prespeed_x | -1.0 |  |
-| js_prespeed_y | 0.55 |  |
-| js_hud_stats | 2 |  |
-| js_hud_strafe | 3 |  |
-| js_hud_pre | 1 |  |
+| js_prefix | Jump | Префикс статистики |
+| js_stats_red | 0 | Цвет HUD основной статистики RGB (красный) |
+| js_stats_green | 200 | Цвет HUD основной статистики RGB (зеленый) |
+| js_stats_blue | 60 | Цвет HUD основной статистики RGB (синий) |
+| js_failstats_red | 200 | Цвет HUD основной статистики при фейле RGB (красный) |
+| js_failstats_green | 10 | Цвет HUD основной статистики при фейле RGB (зеленый) |
+| js_failstats_blue | 50 | Цвет HUD основной статистики при фейле RGB (синий) |
+| js_stats_x | -1.0 | Расположение статистики HUD X |
+| js_stats_y | 0.7 | Расположение статистики HUD Y |
+| js_strafe_x | 0.7 | Расположение стрейфов HUD X|
+| js_strafe_y | 0.35 | Расположение стрейфов HUD Y|
+| js_prespeed_red | 145 | Цвет HUD пре RGB (красный) |
+| js_prespeed_green | 145 | Цвет HUD пре RGB (зеленый) |
+| js_prespeed_blue | 145 | Цвет HUD пре RGB (синий) |
+| js_prespeed_x | -1.0 | Расположение пре X |
+| js_prespeed_y | 0.55 | Расположение пре Y |
+| js_hud_stats | 2 | HUD канал основной статистики |
+| js_hud_strafe | 3 | HUD канал стрейфов |
+| js_hud_pre | 1 | HUD канал пре |
 
 ## Спасибки
 

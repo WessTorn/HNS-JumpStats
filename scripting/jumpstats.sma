@@ -1,7 +1,7 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "beta 0.3.9", "WessTorn");
+	register_plugin("HNS JumpStats", "v1.0.0", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -70,7 +70,7 @@ public rgPM_Move(id) {
 		if (!g_isOldGround[id]) {
 			g_flPreHorSpeed[id] = g_flHorSpeed[id];
 			if (g_eWhichJump[id] != jt_Not) {
-				ready_jumps(id, g_eWhichJump[id], g_flOrigin[id]);
+				ready_jumps(id, g_flOrigin[id]);
 			}
 		}
 
@@ -100,7 +100,7 @@ public rgPM_Move(id) {
 		if (g_eWhichJump[id] != jt_Not && !g_eFailJump[id]) {
 			if ((g_bInDuck[id] ? (g_flOrigin[id][2] + 18.0) : g_flOrigin[id][2]) - g_flFirstJump[id][2] < 0) {
 				g_eFailJump[id] = g_eWhichJump[id] == jt_LadderJump ? fj_notshow : fj_fail;
-				ready_jumps(id, g_eWhichJump[id], g_flPrevOrigin[id]);
+				ready_jumps(id, g_flPrevOrigin[id]);
 			}
 		}
 
@@ -215,14 +215,12 @@ public rgPM_AirMove(id) {
 	if (flStrSpeed > g_flStartSpeed[id]) {
 		g_eStrafeStats[id][g_iStrafes[id]][st_flSpeed] += flStrSpeed - g_flStartSpeed[id];
 		g_flStartSpeed[id] = flStrSpeed;
-		g_eJumpstats[id][js_flEndSpeed] = flStrSpeed;
+	} else if (flStrSpeed < g_flStartSpeed[id]) {
+		g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] += g_flStartSpeed[id] - flStrSpeed;
+		g_flStartSpeed[id] = flStrSpeed;
 	}
 
-	if (flStrSpeed < g_flTempSpeed[id]) {
-		g_eStrafeStats[id][g_iStrafes[id]][st_flSpeedFail] += g_flTempSpeed[id] - flStrSpeed;
-	}
-
-	g_flTempSpeed[id] = flStrSpeed;
+	g_eJumpstats[id][js_flEndSpeed] = flStrSpeed;
 
 	flOldAngle = flAngles[1];
 

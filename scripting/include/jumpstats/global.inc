@@ -57,6 +57,8 @@ enum _:StrafeStats {
 
 new g_eStrafeStats[MAX_PLAYERS + 1][NSTRAFES][StrafeStats];
 new g_iStrafes[MAX_PLAYERS + 1];
+new g_iStrAllEff[MAX_PLAYERS + 1];
+new Float:g_flStrGain[MAX_PLAYERS + 1];
 
 enum PLAYER_VER {
 	IS_MIDDLE,
@@ -142,8 +144,6 @@ new Float:g_flLadderDist[MAX_PLAYERS + 1];
 
 new bool:g_isFalling[MAX_PLAYERS + 1];
 new bool:g_isTouched[MAX_PLAYERS + 1];
-
-new Float:g_flTempSpeed[MAX_PLAYERS + 1];
 
 new g_iDetectHJ[MAX_PLAYERS + 1];
 

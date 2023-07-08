@@ -26,14 +26,11 @@ new const g_VerAir[PLAYER_VER][InfoNames][] =  {
 	{ "drop ", "Drop ", "Drop "}
 };
 
-new g_iStrAllEff[MAX_PLAYERS + 1];
-new Float:g_flStrGain[MAX_PLAYERS + 1];
-
-public ready_jumps(id, JumpType:eJump, Float:flEndJump[3]) {
-	if (eJump == jt_LongJump && g_iDetectHJ[id] == 1) {
-		eJump = jt_HighJump;
+public ready_jumps(id, Float:flEndJump[3]) {
+	if (g_eWhichJump[id] == jt_LongJump && g_iDetectHJ[id] == 1) {
+		g_eWhichJump[id] = jt_HighJump;
 	} else if (g_isFalling[id]) {
-		eJump = jt_WeirdJump;
+		g_eWhichJump[id] = jt_WeirdJump;
 	}
 
 	new Float:flOrigin[3];
@@ -41,21 +38,21 @@ public ready_jumps(id, JumpType:eJump, Float:flEndJump[3]) {
 
 	flOrigin[2] = g_bInDuck[id] ? (flOrigin[2] += 18.0) : flOrigin[2];
 
-	if (eJump == jt_LadderJump) {
+	if (g_eWhichJump[id] == jt_LadderJump) {
 		g_eJumpstats[id][js_flDistance] = get_distance_f(g_flFirstJump[id], flOrigin) + g_flLadderDist[id];
 	} else {
 		g_eJumpstats[id][js_flDistance] = get_distance_f(g_flFirstJump[id], flOrigin) + 32.0;
 	}
 
-	if (eJump != jt_LadderJump && g_eJumpstats[id][js_flDistance] > 64.0) {
+	if (g_eWhichJump[id] != jt_LadderJump && g_eJumpstats[id][js_flDistance] > 64.0) {
 		g_eJumpstats[id][js_flLanding] = g_eJumpstats[id][js_flDistance] - (g_eJumpstats[id][js_iJumpBlock] + g_eJumpstats[id][js_flJof]);
 	}
 
-	if (!g_pCvar[c_iNoslow] && get_entvar(id, var_fuser2) == 0.0 && eJump != jt_LadderJump) {
+	if (!g_pCvar[c_iNoslow] && get_entvar(id, var_fuser2) == 0.0 && g_eWhichJump[id] != jt_LadderJump) {
 		g_eFailJump[id] = fj_notshow;
 	}
 
-	switch(eJump) {
+	switch(g_eWhichJump[id]) {
 		case jt_LongJump, jt_HighJump, jt_CountJump, jt_Multi_CountJump, jt_StandUPCountJump, jt_Multi_StandUPCountJump, jt_WeirdJump: {
 			if (g_eJumpstats[id][js_flDistance] < 200.0)
 				g_eFailJump[id] = fj_notshow;
@@ -105,6 +102,7 @@ public ready_jumps(id, JumpType:eJump, Float:flEndJump[3]) {
 	g_eJumpType[id] = IS_JUMP;
 
 	g_eFailJump[id] = fj_good;
+	g_eWhichJump[id] = jt_Not
 	
 	g_isFalling[id] = false;
 	g_isTouched[id] = false;
@@ -119,11 +117,11 @@ public calc_strafe(id) {
 	new iStrFrameBad;
 	new iStrFrameGood;
 
-	g_flStrGain[id] = floatsub(g_eJumpstats[id][js_flEndSpeed], g_eJumpData[id][g_iJumps[id]][JUMP_PRE]);
 
 	for (new str = 1; str <= g_iStrafes[id]; str++) {
 		iStrFrameGood += g_eStrafeStats[id][str][st_iFrameGood];
 		iStrFrameBad += g_eStrafeStats[id][str][st_iFrameBad];
+		g_flStrGain[id] += g_eStrafeStats[id][str][st_flSpeed];
 
 		if (g_eStrafeStats[id][str][st_flSpeedFail] > 200.0) {
 			g_eFailJump[id] = fj_fail;
@@ -133,7 +131,7 @@ public calc_strafe(id) {
 			iSumAD++;
 		if (g_iStrButtonsInfo[id][str] == 1 || g_iStrButtonsInfo[id][str] == 3)
 			iSumWS++;
-		}
+	}
 
 	if (iStrFrameGood)
 		g_iStrAllEff[id] = (iStrFrameGood * 100 / (iStrFrameGood + iStrFrameBad));
@@ -258,28 +256,29 @@ public show_console(id) {
 	for (new i = 1; i < MaxClients; i++) {
 		if ((i == id || g_isUserSpec[i]) && g_eOnOff[i][of_bStats] == true) {
 			client_print(i, print_console, "");
+			client_print(i, print_console, "HNS JumpStats");
 			
 			switch (g_eWhichJump[id]) {
 				case jt_LongJump, jt_HighJump, jt_LadderJump: {
-					client_print(i, print_console, "%s (%s)^ndistance: %.3f unit/s^nendspeed: %.3f unit/s^nprestrafe: %.0f^nframes: %d", g_eNameJumps[g_eWhichJump[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_console], g_eJumpstats[id][js_flDistance], g_eJumpstats[id][js_flEndSpeed], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eJumpstats[id][js_iFrames]);
+					client_print(i, print_console, "%s (%s)^nDistance: %.3f unit/s^nEndspeed: %.3f unit/s^nPrestrafe: %.0f^nFrames: %d", g_eNameJumps[g_eWhichJump[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_console], g_eJumpstats[id][js_flDistance], g_eJumpstats[id][js_flEndSpeed], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eJumpstats[id][js_iFrames]);
 				}
 				case jt_BhopJump, jt_StandUpBhopJump, jt_DuckBhopJump, jt_BhopInDuck, jt_WeirdJump: {
-					client_print(i, print_console, "%s%s%s (%s)^ndistance: %.3f unit/s^nendspeed: %.3f unit/s^njump %d FOG: pre %.0f^nPre: %.0f^nframes: %d", szPreMess, g_VerAir[g_iVerInfo[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_console], g_eJumpstats[id][js_flDistance], g_eJumpstats[id][js_flEndSpeed], g_eJumpData[id][g_iJumps[id]][JUMP_FOG], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eJumpData[id][1][JUMP_PRE], g_eJumpstats[id][js_iFrames]);
+					client_print(i, print_console, "%s%s%s (%s)^nDistance: %.3f unit/s^nEndspeed: %.3f unit/s^njump %d FOG: %.0f^nPrestrafe: %.0f^nFrames: %d", szPreMess, g_VerAir[g_iVerInfo[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_console], g_eJumpstats[id][js_flDistance], g_eJumpstats[id][js_flEndSpeed], g_eJumpData[id][g_iJumps[id]][JUMP_FOG], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eJumpData[id][1][JUMP_PRE], g_eJumpstats[id][js_iFrames]);
 				}
 				case jt_CountJump, jt_StandUPCountJump: {
-					client_print(i, print_console, "%s%s%s (%s)^ndistance: %.3f unit/s^nendspeed: %.3f unit/s^njump %d FOG: pre %.0f^nduck pre: %.0f^nframes: %d", szPreMess, g_VerAir[g_iVerInfo[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_console], g_eJumpstats[id][js_flDistance], g_eJumpstats[id][js_flEndSpeed], g_eJumpData[id][g_iJumps[id]][JUMP_FOG], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eDuckData[id][1][DUCK_PRE], g_eJumpstats[id][js_iFrames]);
+					client_print(i, print_console, "%s%s%s (%s)^nDistance: %.3f unit/s^nEndspeed: %.3f unit/s^njump %d FOG: %.0f^nDuck pre: %.0f^nFrames: %d", szPreMess, g_VerAir[g_iVerInfo[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_console], g_eJumpstats[id][js_flDistance], g_eJumpstats[id][js_flEndSpeed], g_eJumpData[id][g_iJumps[id]][JUMP_FOG], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eDuckData[id][1][DUCK_PRE], g_eJumpstats[id][js_iFrames]);
 				}
 				case jt_Multi_CountJump, jt_Multi_StandUPCountJump: {
 					if (g_iDucks[id] == 2) {
-						client_print(i, print_console, "%s%s%s (%s)^ndistance: %.3f unit/s^nendspeed: %.3f unit/s^njump %d FOG: pre %.0f^nduck pre: %.0f^nDucks: %d%^nframes: %d", szPreMess, g_VerAir[g_iVerInfo[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_console], g_eJumpstats[id][js_flDistance], g_eJumpstats[id][js_flEndSpeed], g_eJumpData[id][g_iJumps[id]][JUMP_FOG], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eDuckData[id][1][DUCK_PRE], g_iDucks[id], g_eJumpstats[id][js_iFrames]);	
+						client_print(i, print_console, "%s%s%s (%s)^nDistance: %.3f unit/s^nEndspeed: %.3f unit/s^njump %d FOG: %.0f^nDuck pre: %.0f^nDucks: %d%^nFrames: %d", szPreMess, g_VerAir[g_iVerInfo[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_console], g_eJumpstats[id][js_flDistance], g_eJumpstats[id][js_flEndSpeed], g_eJumpData[id][g_iJumps[id]][JUMP_FOG], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eDuckData[id][1][DUCK_PRE], g_iDucks[id], g_eJumpstats[id][js_iFrames]);	
 					} else {
-						client_print(i, print_console, "%s%s%s (%s)^ndistance: %.3f unit/s^nendspeed: %.3f unit/s^nprestrafe: (%.0f) %.0f^nDucks: %d%^nframes: %d", szPreMess, g_VerAir[g_iVerInfo[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_console], g_eJumpstats[id][js_flDistance], g_eJumpstats[id][js_flEndSpeed], g_eDuckData[id][1][DUCK_PRE], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iDucks[id], g_eJumpstats[id][js_iFrames]);
+						client_print(i, print_console, "%s%s%s (%s)^nDistance: %.3f unit/s^nEndspeed: %.3f unit/s^nPrestrafe: (%.0f) %.0f^nDucks: %d%^nFrames: %d", szPreMess, g_VerAir[g_iVerInfo[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_console], g_eJumpstats[id][js_flDistance], g_eJumpstats[id][js_flEndSpeed], g_eDuckData[id][1][DUCK_PRE], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_iDucks[id], g_eJumpstats[id][js_iFrames]);
 					}
 				}
 			}
 
 			client_print(i, print_console, "");
-			client_print(i, print_console, "#N button gain-loss loss duration efficiency");
+			client_print(i, print_console, "#N button Gain-loss Loss Frame Efficiency");
 
 			for (new str = 1; str <= g_iStrafes[id]; str++) {
 				new iEffPrecent;

@@ -17,9 +17,9 @@ public cmdLjsmenu(id) {
 	}
 
 	if (g_eOnOff[id][of_bStats] == true) {
-		menu_additem(hMenu, "Stats all - \yOn", "3");
+		menu_additem(hMenu, "Stats - \yOn", "3");
 	} else {
-		menu_additem(hMenu, "Stats all - \dOff", "3");
+		menu_additem(hMenu, "Stats - \dOff", "3");
 	}
 
 	if (g_eOnOff[id][of_bChatInfo] == true) {
