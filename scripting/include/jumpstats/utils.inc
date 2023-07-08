@@ -33,6 +33,7 @@ stock reset_stats(id) {
 	g_isTouched[id] = false;
 
 	g_iDetectHJ[id] = 0;
+	g_flStartSpeed[id] = 0.0;
 }
 
 stock reset_strafes(id) {
@@ -42,7 +43,6 @@ stock reset_strafes(id) {
 	}
 	
 	g_iStrafes[id] = 0;
-	g_iStrOldButtons[id] = 0;
 	g_flTempSpeed[id] = 0.0;
 }
 

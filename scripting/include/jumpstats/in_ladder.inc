@@ -4,7 +4,7 @@ public in_ladder(id, bool:isJump) {
 	g_eJumpType[id] = IS_JUMP;
 	g_iJumps[id]++;
 	g_eJumpData[id][g_iJumps[id]][JUMP_PRE] = g_flHorSpeed[id];
-	g_eJumpstats[id][js_flEndSpeed] = g_flHorSpeed[id];
+	g_flStartSpeed[id] = g_flHorSpeed[id];
 
 	g_isLadderBhop[id] = true;
 

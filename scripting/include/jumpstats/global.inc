@@ -57,7 +57,6 @@ enum _:StrafeStats {
 
 new g_eStrafeStats[MAX_PLAYERS + 1][NSTRAFES][StrafeStats];
 new g_iStrafes[MAX_PLAYERS + 1];
-new g_iStrOldButtons[MAX_PLAYERS + 1];
 
 enum PLAYER_VER {
 	IS_MIDDLE,
@@ -127,6 +126,7 @@ new Float:g_flPrevVelocity[MAX_PLAYERS + 1][3];
 new Float:g_flHorSpeed[MAX_PLAYERS + 1];
 new Float:g_flPrevHorSpeed[MAX_PLAYERS + 1];
 new Float:g_flPreHorSpeed[MAX_PLAYERS + 1];
+new Float:g_flStartSpeed[MAX_PLAYERS + 1];
 
 new Float:g_flMaxSpeed[MAX_PLAYERS + 1]
 

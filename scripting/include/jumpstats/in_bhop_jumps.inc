@@ -4,7 +4,7 @@ public in_bhop_js(id, iFog) {
 		g_flPrevHorSpeed[id] = g_flHorSpeed[id]
 	}
 
-	g_eJumpstats[id][js_flEndSpeed] = g_flPrevHorSpeed[id];
+	g_flStartSpeed[id] = g_flPrevHorSpeed[id];
 	
 	if (iFog > 10) {
 		g_iJumps[id] = 0;

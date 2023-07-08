@@ -109,6 +109,7 @@ public ready_jumps(id, JumpType:eJump, Float:flEndJump[3]) {
 	g_isTouched[id] = false;
 
 	g_iDetectHJ[id] = 0;
+	g_flStartSpeed[id] = 0.0;
 }
 
 public calc_strafe(id) {
