@@ -1,7 +1,7 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "v1.0.0", "WessTorn");
+	register_plugin("HNS JumpStats", "v1.0.1", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -28,7 +28,6 @@ public rgPM_Move(id) {
 	static iFog;
 
 	g_iPrevButtons[id] = get_pmove(pm_oldbuttons);
-	g_flMaxSpeed[id] = get_pmove(pm_maxspeed);
 
 	get_pmove(pm_origin, g_flOrigin[id]);
 	get_pmove(pm_velocity, g_flVelocity[id]);
@@ -40,9 +39,9 @@ public rgPM_Move(id) {
 
 	new bool:isLadder = bool:(get_pmove(pm_movetype) == MOVETYPE_FLY);
 
-	new bool:isGound = !bool:(get_pmove(pm_onground) == -1);
+	new bool:isGround = !bool:(get_pmove(pm_onground) == -1);
 
-	isGound = isGound || isLadder;
+	isGround = isGround || isLadder;
 
 	g_isOldGround[id] = g_isOldGround[id] || g_bPrevLadder[id];
 
@@ -53,7 +52,7 @@ public rgPM_Move(id) {
 	if (g_eOnOff[id][of_bSpeed] || g_eOnOff[id][of_bJof] || g_eOnOff[id][of_bPre])
 		show_prespeed(id);
 
-	if (isGound) {
+	if (isGround) {
 		iFog++;
 
 		if (isLadder) {
@@ -145,7 +144,7 @@ public rgPM_Move(id) {
 	g_flPrevVelocity[id] = g_flVelocity[id];
 	g_flPrevOrigin[id] = g_flOrigin[id];
 
-	g_isOldGround[id] = isGound;
+	g_isOldGround[id] = isGround;
 	g_bPrevLadder[id] = isLadder;
 	g_bPrevInDuck[id] = g_bInDuck[id];
 
@@ -170,7 +169,7 @@ public rgPM_AirMove(id) {
 		detect_hj(id, g_flOrigin[id], g_flFirstJump[id][2]);
 	}
 
-	if (g_iStrafes[id] >= NSTRAFES) {
+	if (g_iStrafes[id] >= NSTRAFES - 1) {
 		return HC_CONTINUE;
 	}
 
