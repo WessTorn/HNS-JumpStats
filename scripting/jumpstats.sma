@@ -1,7 +1,7 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "v1.0.2", "WessTorn");
+	register_plugin("HNS JumpStats", "v1.0.3", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -21,39 +21,45 @@ public rgPlayerSpawn(id) {
 }
 
 public rgPM_Move(id) {
-	if (!is_user_connected(id) || is_user_bot(id) || is_user_hltv(id)) {
+	if (is_user_bot(id) || is_user_hltv(id)) {
 		return HC_CONTINUE;
 	}
 
-	static iFog;
+	if (!is_user_alive(id)) {
+		if(get_member(id, m_iObserverLastMode) == OBS_ROAMING)
+			return HC_CONTINUE;
 
-	g_iPrevButtons[id] = get_pmove(pm_oldbuttons);
+		new iTarget = get_member(id, m_hObserverTarget);
 
-	get_pmove(pm_origin, g_flOrigin[id]);
-	get_pmove(pm_velocity, g_flVelocity[id]);
+		g_isUserSpec[id] = iTarget;
+		return HC_CONTINUE;
+	} else {
+		g_isUserSpec[id] = 0;
+	}
+
+	g_iPrevButtons[id] = get_entvar(id, var_oldbuttons);
+
+	get_entvar(id, var_origin, g_flOrigin[id]);
+	get_entvar(id, var_velocity, g_flVelocity[id]);
 
 	g_flHorSpeed[id] = vector_hor_length(g_flVelocity[id]);
 	g_flPrevHorSpeed[id] = vector_hor_length(g_flPrevVelocity[id]);
 
-	g_bInDuck[id] = bool:(get_pmove(pm_flags) & FL_DUCKING);
+	g_bInDuck[id] = bool:(get_entvar(id, var_flags) & FL_DUCKING);
 
-	new bool:isLadder = bool:(get_pmove(pm_movetype) == MOVETYPE_FLY);
+	new bool:isLadder = bool:(get_entvar(id, var_movetype) == MOVETYPE_FLY);
 
-	new bool:isGround = !bool:(get_pmove(pm_onground) == -1);
+	new bool:isGround = bool:(get_entvar(id, var_flags) & FL_ONGROUND);
 
 	isGround = isGround || isLadder;
 
 	g_isOldGround[id] = g_isOldGround[id] || g_bPrevLadder[id];
 
-	for (new i = 1; i < MaxClients; i++) {
-		g_isUserSpec[i] = is_user_spectating_player(i, id);
-	}
-
 	if (g_pCvar[c_iEnablePreSpeed] && (g_eOnOff[id][of_bSpeed] || g_eOnOff[id][of_bJof] || g_eOnOff[id][of_bPre]))
 		show_prespeed(id);
 
 	if (isGround) {
-		iFog++;
+		g_iFog[id]++;
 
 		if (isLadder) {
 			new iEnt[1];
@@ -73,7 +79,7 @@ public rgPM_Move(id) {
 			}
 		}
 
-		if (iFog == 1) {
+		if (g_iFog[id] == 1) {
 			if (g_bInDuck[id]) {
 				g_eDuckType[id] = g_eDuckType[id] != IS_DUCK_NOT ? IS_SGS : g_eDuckType[id];
 				g_eJumpType[id] = g_eJumpType[id] != IS_DUCKBHOP ? IS_SBJ : g_eJumpType[id];
@@ -87,13 +93,11 @@ public rgPM_Move(id) {
 				g_ePreStats[id][ptBackWards] = bool:(g_iPrevButtons[id] & IN_BACK);
 		}
 
-		static bool:bOneReset;
-
-		if (iFog <= 10) {
-			bOneReset = true;
-		} else if (bOneReset) {
+		if (g_iFog[id] <= 10) {
+			g_bOneReset[id] = true;
+		} else if (g_bOneReset[id]) {
 			reset_stats(id);
-			bOneReset = false;
+			g_bOneReset[id] = false;
 		}
 	} else {
 		if (g_eWhichJump[id] != jt_Not && !g_eFailJump[id]) {
@@ -113,16 +117,16 @@ public rgPM_Move(id) {
 				in_ladder(id, isJump);
 			} else {
 				if (isDuck) {
-					in_ducks(id, iFog);
+					in_ducks(id, g_iFog[id]);
 				}
 				if (isJump) {
-					in_bhop_js(id, iFog);
+					in_bhop_js(id, g_iFog[id]);
 
 					calc_jof_block(id, g_flFirstJump[id]);
 				}
 			}
 			if (!isDuck && !isJump && g_flVelocity[id][2] <= -4.0) {
-				if (iFog > 10) {
+				if (g_iFog[id] > 10) {
 					g_isFalling[id] = true;
 					g_eJumpType[id] = IS_JUMP;
 					g_iJumps[id]++;
@@ -136,7 +140,7 @@ public rgPM_Move(id) {
 				g_isTouched[id] = get_pmove(pm_numtouch) ? true : g_isTouched[id];
 		}
 
-		iFog = 0;
+		g_iFog[id] = 0;
 	}
 	
 	g_iOldButtons[id] = g_iPrevButtons[id];
@@ -173,41 +177,38 @@ public rgPM_AirMove(id) {
 		return HC_CONTINUE;
 	}
 
-	new iButtons = get_ucmd(get_pmove(pm_cmd), ucmd_buttons);
-	static iOldButtons;
+	new iButtons = get_entvar(id, var_button);
 
-	new Float:flVelocity[3]; get_pmove(pm_velocity, flVelocity);
+	new Float:flVelocity[3]; get_entvar(id, var_velocity, flVelocity);
 
 	new Float:flStrSpeed = vector_hor_length(flVelocity);
 
 	new Float:flAngles[3]; get_entvar(id, var_angles, flAngles);
-	static Float:flOldAngle;
 
 	g_eJumpstats[id][js_iFrames]++;
 
-	new bool:isTiring = bool:(flOldAngle != flAngles[1]);
+	new bool:isTiring = bool:(g_flStrOldAngle[id] != flAngles[1]);
 
-	if (iButtons & IN_MOVELEFT && !(iOldButtons & IN_MOVELEFT) && !(iButtons & (IN_MOVERIGHT|IN_BACK|IN_FORWARD)) && (isTiring)) {
+	if (iButtons & IN_MOVELEFT && !(g_iOldStrButtons[id] & IN_MOVELEFT) && !(iButtons & (IN_MOVERIGHT|IN_BACK|IN_FORWARD)) && (isTiring)) {
 		g_iStrafes[id]++;
 		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_A;
-	} else if (iButtons & IN_MOVERIGHT && !(iOldButtons & IN_MOVERIGHT) && !(iButtons & (IN_MOVELEFT|IN_BACK|IN_FORWARD)) && (isTiring)) {
+	} else if (iButtons & IN_MOVERIGHT && !(g_iOldStrButtons[id] & IN_MOVERIGHT) && !(iButtons & (IN_MOVELEFT|IN_BACK|IN_FORWARD)) && (isTiring)) {
 		g_iStrafes[id]++;
 		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_D;
-	} else if (iButtons & IN_BACK && !(iOldButtons & IN_BACK) && !(iButtons & (IN_MOVELEFT|IN_MOVERIGHT|IN_FORWARD)) && (isTiring)) {
+	} else if (iButtons & IN_BACK && !(g_iOldStrButtons[id] & IN_BACK) && !(iButtons & (IN_MOVELEFT|IN_MOVERIGHT|IN_FORWARD)) && (isTiring)) {
 		g_iStrafes[id]++;
 		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_S;
-	} else if (iButtons & IN_FORWARD && !(iOldButtons & IN_FORWARD) && !(iButtons & (IN_MOVELEFT|IN_MOVERIGHT|IN_BACK)) && (isTiring)) {
+	} else if (iButtons & IN_FORWARD && !(g_iOldStrButtons[id] & IN_FORWARD) && !(iButtons & (IN_MOVELEFT|IN_MOVERIGHT|IN_BACK)) && (isTiring)) {
 		g_iStrafes[id]++;
 		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_W;
 	}
 
-	if (iButtons & IN_MOVERIGHT || iButtons & IN_MOVELEFT || iButtons & IN_FORWARD || iButtons & IN_BACK) {
-		if (flStrSpeed > g_flHorSpeed[id]) {
+	if (iButtons & (IN_MOVERIGHT|IN_MOVELEFT|IN_FORWARD|IN_BACK)) {
+		if (flStrSpeed > g_flStartSpeed[id]) {
 			g_eStrafeStats[id][g_iStrafes[id]][st_iFrameGood] += 1;
 		} else {
 			g_eStrafeStats[id][g_iStrafes[id]][st_iFrameBad] += 1;
 		}
-		g_eStrafeStats[id][g_iStrafes[id]][st_iFrame] += 1;
 
 	}
 
@@ -219,17 +220,19 @@ public rgPM_AirMove(id) {
 		g_flStartSpeed[id] = flStrSpeed;
 	}
 
+	g_eStrafeStats[id][g_iStrafes[id]][st_iFrame] += 1;
+
 	g_eJumpstats[id][js_flEndSpeed] = flStrSpeed;
 
-	flOldAngle = flAngles[1];
+	g_flStrOldAngle[id] = flAngles[1];
 
 	if ((iButtons & IN_MOVERIGHT && iButtons & (IN_MOVELEFT|IN_FORWARD|IN_BACK))
 	|| (iButtons & IN_MOVELEFT && iButtons & (IN_FORWARD|IN_BACK|IN_MOVERIGHT))
 	|| (iButtons & IN_FORWARD && iButtons & (IN_BACK|IN_MOVERIGHT|IN_MOVELEFT))
 	|| (iButtons & IN_BACK && iButtons & (IN_MOVERIGHT|IN_MOVELEFT|IN_FORWARD)))
-		iOldButtons = 0;
+		g_iOldStrButtons[id] = 0;
 	else if (isTiring)
-		iOldButtons = iButtons;
+		g_iOldStrButtons[id] = iButtons;
 
 	return HC_CONTINUE;
 }

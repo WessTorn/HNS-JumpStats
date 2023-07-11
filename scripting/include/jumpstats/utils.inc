@@ -150,30 +150,6 @@ public get_colorchat_by_distance(id, aDistance[ChatDist], JumpType:iJumpType) {
 	return PLUGIN_HANDLED;
 }
 
-
-enum TypeInfo {
-	all = 0, one, multi
-}
-
-stock is_user_spectating_player(spectator, player) {
-        if(!is_user_connected(spectator) || !is_user_connected(player))
-            return 0;
-
-        if(is_user_alive(spectator) || !is_user_alive(player))
-            return 0;
-
-        static specmode;
-        specmode = pev(spectator, pev_iuser1);
-
-        if(specmode == 3)
-            return 0;
-       
-        if(pev(spectator, pev_iuser2) == player)
-            return 1;
-       
-        return 0;
-}
-
 public calc_jof_block(id, Float:flJumpOff[3]) {
 	new Float:flOrigin[3];
 	new Float:tmpblock[3], tmpjblock[3], Float:tmpOrigin[3], Float:tmpOrigin2[3];
@@ -288,14 +264,14 @@ public calc_jof_block(id, Float:flJumpOff[3]) {
 }
 
 stock bool:isUserSurfing(id) {
-	static Float:origin[3], Float:dest[3];
+	new Float:origin[3], Float:dest[3];
 	get_entvar(id, var_origin, origin);
 	
 	dest[0] = origin[0];
 	dest[1] = origin[1];
 	dest[2] = origin[2] - 1.0;
 
-	static Float:flFraction;
+	new Float:flFraction;
 
 	engfunc(EngFunc_TraceHull, origin, dest, 0, 
 		g_bInDuck[id] ? HULL_HEAD : HULL_HUMAN, id, 0);

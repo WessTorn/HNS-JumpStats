@@ -118,6 +118,8 @@ new bool:g_isOldGround[MAX_PLAYERS + 1];
 new g_iPrevButtons[MAX_PLAYERS + 1];
 new g_iOldButtons[MAX_PLAYERS + 1];
 
+new g_iFog[MAX_PLAYERS + 1]
+
 new Float:g_flOrigin[MAX_PLAYERS + 1][3];
 new Float:g_flPrevOrigin[MAX_PLAYERS + 1][3];
 new Float:g_flFirstJump[MAX_PLAYERS + 1][3];
@@ -140,6 +142,9 @@ new Float:g_flLadderXYZ[MAX_PLAYERS + 1][3];
 new Float:g_flLadderSize[MAX_PLAYERS + 1][3];
 new Float:g_flLadderDist[MAX_PLAYERS + 1];
 
+new g_iOldStrButtons[MAX_PLAYERS + 1];
+new Float:g_flStrOldAngle[MAX_PLAYERS + 1];
+
 new bool:g_isFalling[MAX_PLAYERS + 1];
 new bool:g_isTouched[MAX_PLAYERS + 1];
 
@@ -150,3 +155,5 @@ new g_isUserSpec[MAX_PLAYERS + 1];
 new g_hudStrafe;
 new g_hudStats;
 new g_hudPreSpeed;
+
+new bool:g_bOneReset[MAX_PLAYERS + 1];

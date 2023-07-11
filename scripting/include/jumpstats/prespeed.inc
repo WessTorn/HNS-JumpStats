@@ -39,30 +39,30 @@ new Float:g_flJof[MAX_PLAYERS + 1];
 
 new Float:g_flHudTime[MAX_PLAYERS + 1];
 
+new g_isTmpPre[MAX_PLAYERS + 1];
+new Float:g_flHudPreTime[MAX_PLAYERS + 1];
+
 public show_prespeed(id) {
 	new Float:g_flGameTime = get_gametime();
 	
 	if(g_flHudTime[id] + 0.05 > g_flGameTime)
 		return;
 
-	static bool:isPre;
-	static Float:flPreTime;
-
-	if (!isPre) {
-		isPre = g_isPre[id];
-		if (isPre) {
-			flPreTime = g_flGameTime + 1.0;
+	if (!g_isTmpPre[id]) {
+		g_isTmpPre[id] = g_isPre[id];
+		if (g_isTmpPre[id]) {
+			g_flHudPreTime[id] = g_flGameTime + 1.0;
 			g_isPre[id] = false;
 		}
 	} else {
 		if (g_isPre[id]) {
-			flPreTime = g_flGameTime + 1.0;
+			g_flHudPreTime[id] = g_flGameTime + 1.0;
 			g_isPre[id] = false;
 		}
 	}
 
-	if(flPreTime < g_flGameTime) {
-		isPre = false;
+	if(g_flHudPreTime[id] < g_flGameTime) {
+		g_isTmpPre[id] = false;
 	}
 
 	set_hudmessage(g_pCvar[c_iPreSpeedR], g_pCvar[c_iPreSpeedG], g_pCvar[c_iPreSpeedB], g_pCvar[c_iPreSpeedX], g_pCvar[c_iPreSpeedY], 0, 1.0, 0.15, 0.0, 0.0, g_pCvar[c_iPreSpeed]);
@@ -70,28 +70,32 @@ public show_prespeed(id) {
 	new szJof[8];
 
 	if (g_isJof[id])
-		formatex(szJof, charsmax(szJof), "jof: %.0f", g_flJof[id])
+		formatex(szJof, charsmax(szJof), "jof: %.0f", g_flJof[id]);
 
 	new szSpeed[8];
 
 	if (g_eOnOff[id][of_bSpeed])
-		formatex(szSpeed, charsmax(szSpeed), "%.0f u/s", g_flHorSpeed[id])
-
-	if (g_eOnOff[id][of_bPre] && isPre) {
-		new iType = g_ePreData[id][sp_iType];
-		switch (iType) {
-			case 0..4: {
-				ShowSyncHudMsg(id, g_hudPreSpeed, "%s^n%s^n%s %d fog:^n%.2f^n%.2f", g_isJof[id] ? szJof : "", g_eOnOff[id][of_bSpeed] ? szSpeed : "", g_szPreType[iType], g_ePreData[id][sp_iFog], g_ePreData[id][sp_flPre], g_ePreData[id][sp_flPost]);
-			}
-			case 5, 6: {
-				ShowSyncHudMsg(id, g_hudPreSpeed, "%s^n%s^n%s:^n%.2f", g_isJof[id] ? szJof : "", g_eOnOff[id][of_bSpeed] ? szSpeed : "", g_szPreType[iType], g_ePreData[id][sp_flPre]);
-			}
-			default: {
-				ShowSyncHudMsg(id, g_hudPreSpeed, "%s^n%s^n%s pre:^n%.2f", g_isJof[id] ? szJof : "", g_eOnOff[id][of_bSpeed] ? szSpeed : "", g_szPreType[iType], g_ePreData[id][sp_flPre]);
+		formatex(szSpeed, charsmax(szSpeed), "%.0f u/s", g_flHorSpeed[id]);
+		
+	for (new i = 1; i < MaxClients; i++) {
+		if (i == id || g_isUserSpec[i] == id) {
+			if (g_eOnOff[id][of_bPre] && g_isTmpPre[id]) {
+				new iType = g_ePreData[id][sp_iType];
+				switch (iType) {
+					case 0..4: {
+						ShowSyncHudMsg(i, g_hudPreSpeed, "%s^n%s^n%s %d fog:^n%.2f^n%.2f", g_isJof[i] ? szJof : "", g_eOnOff[i][of_bSpeed] ? szSpeed : "", g_szPreType[iType], g_ePreData[id][sp_iFog], g_ePreData[id][sp_flPre], g_ePreData[id][sp_flPost]);
+					}
+					case 5, 6: {
+						ShowSyncHudMsg(i, g_hudPreSpeed, "%s^n%s^n%s:^n%.2f", g_isJof[i] ? szJof : "", g_eOnOff[i][of_bSpeed] ? szSpeed : "", g_szPreType[iType], g_ePreData[id][sp_flPre]);
+					}
+					default: {
+						ShowSyncHudMsg(i, g_hudPreSpeed, "%s^n%s^n%s pre:^n%.2f", g_isJof[i] ? szJof : "", g_eOnOff[i][of_bSpeed] ? szSpeed : "", g_szPreType[iType], g_ePreData[id][sp_flPre]);
+					}
+				}
+			} else { 
+				ShowSyncHudMsg(i, g_hudPreSpeed, "%s^n%s", g_isJof[i] ? szJof : "", g_eOnOff[i][of_bSpeed] ? szSpeed : "");
 			}
 		}
-	} else { 
-		ShowSyncHudMsg(id, g_hudPreSpeed, "%s^n%s", g_isJof[id] ? szJof : "", g_eOnOff[id][of_bSpeed] ? szSpeed : "");
 	}
 
 	g_flHudTime[id] = g_flGameTime;
