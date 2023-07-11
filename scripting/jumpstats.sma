@@ -1,7 +1,7 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "v1.0.1", "WessTorn");
+	register_plugin("HNS JumpStats", "v1.0.2", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -49,7 +49,7 @@ public rgPM_Move(id) {
 		g_isUserSpec[i] = is_user_spectating_player(i, id);
 	}
 
-	if (g_eOnOff[id][of_bSpeed] || g_eOnOff[id][of_bJof] || g_eOnOff[id][of_bPre])
+	if (g_pCvar[c_iEnablePreSpeed] && (g_eOnOff[id][of_bSpeed] || g_eOnOff[id][of_bJof] || g_eOnOff[id][of_bPre]))
 		show_prespeed(id);
 
 	if (isGround) {

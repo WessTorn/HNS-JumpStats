@@ -1,5 +1,10 @@
 enum JS_CVAR {
 	c_szPrefix[24],
+	c_iEnableStats,
+	c_iEnableStrafe,
+	c_iEnablePreSpeed,
+	c_iEnableConsole,
+	c_iEnableChat,
 	c_iStatsR,
 	c_iStatsG,
 	c_iStatsB,
@@ -28,6 +33,12 @@ new g_pCvar[JS_CVAR];
 init_cvars() {
 	bind_pcvar_string(register_cvar("js_prefix", "Jump"),	g_pCvar[c_szPrefix], charsmax(g_pCvar[c_szPrefix]));
 
+	bind_pcvar_num(register_cvar("js_enable_stats", "1"),		g_pCvar[c_iEnableStats]);
+	bind_pcvar_num(register_cvar("js_enable_strafe", "1"),		g_pCvar[c_iEnableStrafe]);
+	bind_pcvar_num(register_cvar("js_enable_prespeed", "1"),	g_pCvar[c_iEnablePreSpeed]);
+	bind_pcvar_num(register_cvar("js_enable_console", "1"),		g_pCvar[c_iEnableConsole]);
+	bind_pcvar_num(register_cvar("js_enable_chat", "1"),		g_pCvar[c_iEnableChat]);
+	
 	bind_pcvar_num(register_cvar("js_stats_red", "0"),		g_pCvar[c_iStatsR]);
 	bind_pcvar_num(register_cvar("js_stats_green", "200"),	g_pCvar[c_iStatsG]);
 	bind_pcvar_num(register_cvar("js_stats_blue", "60"),		g_pCvar[c_iStatsB]);

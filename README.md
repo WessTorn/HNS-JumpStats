@@ -85,6 +85,11 @@ FOG (frames on the ground) - в двух словах, это кол-во frame 
 | Cvar                 | Default    | Description |
 | :------------------- | :--------: | :--------: |
 | js_prefix | Jump | Префикс статистики |
+| js_enable_stats | 1 | `1` - Вкл/ `0` Откл HUD Основной статистики |
+| js_enable_strafe | 1 | `1` - Вкл/ `0` Откл HUD Статистики стрейфов|
+| js_enable_prespeed | 1 | `1` - Вкл/ `0` Откл HUD Скорости, пре и jof |
+| js_enable_console | 1 | `1` - Вкл/ `0` Откл Информацию о прыжках в консоле |
+| js_enable_chat | 1 | `1` - Вкл/ `0` Откл Информацию о прыжках в чатах |
 | js_stats_red | 0 | Цвет HUD основной статистики RGB (красный) |
 | js_stats_green | 200 | Цвет HUD основной статистики RGB (зеленый) |
 | js_stats_blue | 60 | Цвет HUD основной статистики RGB (синий) |

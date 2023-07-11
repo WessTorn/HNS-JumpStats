@@ -83,6 +83,11 @@ FOG (frames on the ground) - in a nutshell, this is the number of frames (frames
 | Cvar | Default | Description |
 | :------------------- | :--------: | :--------: |
 | js_prefix | Jump | statistics prefix |
+| js_enable_stats | 1 | `1` - On/`0` Disable HUD Basic Statistics |
+| js_enable_strafe | 1 | `1` - On / `0` Disable Striff Statistics HUD|
+| js_enable_prespeed | 1 | `1` - On / `0` Disable HUD Speed, pre and jof |
+| js_enable_console | 1 | `1` - On/`0` Disable Jump information in console |
+| js_enable_chat | 1 | `1` - On/ `0` Disable information about jumping in chats |
 | js_stats_red | 0 | HUD color of the main statistics RGB (red) |
 | js_stats_green | 200 | HUD color of the main statistics RGB (green) |
 | js_stats_blue | 60 | HUD color of the main statistics RGB (blue)

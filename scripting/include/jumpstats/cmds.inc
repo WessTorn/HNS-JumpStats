@@ -20,6 +20,9 @@ public init_cmds() {
 }
 
 public cmdShowChatInfo(id) {
+	if (!g_pCvar[c_iEnableChat])
+		return PLUGIN_HANDLED;
+
 	g_eOnOff[id][of_bChatInfo] = !g_eOnOff[id][of_bChatInfo];
 
 	client_print_color(id, print_team_blue, "[^3%s^1] Chatinfo: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bChatInfo] ? "enabled" : "disabled");
@@ -28,6 +31,9 @@ public cmdShowChatInfo(id) {
 }
 
 public cmdShowStats(id) {
+	if (!g_pCvar[c_iEnableStats])
+		return PLUGIN_HANDLED;
+
 	g_eOnOff[id][of_bStats] = !g_eOnOff[id][of_bStats];
 
 	client_print_color(id, print_team_blue, "[^3%s^1] Stats: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bStats] ? "enabled" : "disabled");
@@ -36,6 +42,9 @@ public cmdShowStats(id) {
 }
 
 public cmdShowStrafe(id) {
+	if (!g_pCvar[c_iEnableStrafe])
+		return PLUGIN_HANDLED;
+		
 	g_eOnOff[id][of_bStrafe] = !g_eOnOff[id][of_bStrafe];
 
 	client_print_color(id, print_team_blue, "[^3%s^1] Strafe stats: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bStrafe] ? "enabled" : "disabled");
@@ -44,6 +53,9 @@ public cmdShowStrafe(id) {
 }
 
 public cmdShowJof(id) {
+	if (!g_pCvar[c_iEnablePreSpeed])
+		return PLUGIN_HANDLED;
+
 	g_eOnOff[id][of_bJof] = !g_eOnOff[id][of_bJof];
 
 	client_print_color(id, print_team_blue, "[^3%s^1] JumpOff: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bJof] ? "enabled" : "disabled");
@@ -52,6 +64,9 @@ public cmdShowJof(id) {
 }
 
 public cmdShowSpeed(id) {
+	if (!g_pCvar[c_iEnablePreSpeed])
+		return PLUGIN_HANDLED;
+
 	g_eOnOff[id][of_bSpeed] = !g_eOnOff[id][of_bSpeed];
 
 	client_print_color(id, print_team_blue, "[^3%s^1] Speed: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bSpeed] ? "enabled" : "disabled");
@@ -60,6 +75,9 @@ public cmdShowSpeed(id) {
 }
 
 public cmdShowPre(id) {
+	if (!g_pCvar[c_iEnablePreSpeed])
+		return PLUGIN_HANDLED;
+
 	g_eOnOff[id][of_bPre] = !g_eOnOff[id][of_bPre];
 
 	client_print_color(id, print_team_blue, "[^3%s^1] Pre: ^3%s^1.", g_pCvar[c_szPrefix], g_eOnOff[id][of_bPre] ? "enabled" : "disabled");

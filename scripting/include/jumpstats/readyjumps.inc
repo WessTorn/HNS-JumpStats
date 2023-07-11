@@ -73,13 +73,17 @@ public ready_jumps(id, Float:flEndJump[3]) {
 	calc_strafe(id);
 
 	if (g_eFailJump[id] != fj_notshow) {
-		show_strafe_hud(id);
 
-		show_stats_hud(id);
+		if (g_pCvar[c_iEnableStrafe])
+			show_strafe_hud(id);
 
-		show_console(id);
+		if (g_pCvar[c_iEnableStats])
+			show_stats_hud(id);
 
-		if (g_eFailJump[id] == fj_good)
+		if (g_pCvar[c_iEnableConsole])
+			show_console(id);
+
+		if (g_pCvar[c_iEnableChat] && g_eFailJump[id] == fj_good)
 			show_chat(id);
 	}
 
