@@ -6,6 +6,7 @@
 #include <jumpstats/global>
 #include <jumpstats/cvars>
 #include <jumpstats/cmds>
+#include <jumpstats/forwards>
 #include <jumpstats/menus>
 #include <jumpstats/utils>
 #include <jumpstats/prespeed>

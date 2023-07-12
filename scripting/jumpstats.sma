@@ -1,13 +1,13 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "v1.0.3", "WessTorn");
+	register_plugin("HNS JumpStats", "v1.0.4", "WessTorn");
 
 	init_cvars();
 	init_cmds();
 
 	RegisterHookChain(RG_CBasePlayer_Spawn, "rgPlayerSpawn", true);
-	RegisterHookChain(RG_PM_Move, "rgPM_Move");
+	RegisterHookChain(RG_PM_Move, "rgPM_Move", true);
 	RegisterHookChain(RG_PM_AirMove, "rgPM_AirMove", true);
 
 	g_hudStrafe = CreateHudSyncObj();
