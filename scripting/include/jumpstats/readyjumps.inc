@@ -257,8 +257,7 @@ public show_console(id) {
 		iLen += format(szPreMess[iLen], sizeof szPreMess - iLen, "[bw] ");
 	}
 
-	client_print(id, print_console, "");
-	client_print(id, print_console, "HNS JumpStats");
+	client_print(id, print_console, "^nHNS JumpStats");
 	
 	switch (g_eWhichJump[id]) {
 		case jt_LongJump, jt_HighJump, jt_LadderJump: {
@@ -279,8 +278,7 @@ public show_console(id) {
 		}
 	}
 
-	client_print(id, print_console, "");
-	client_print(id, print_console, "#N button Gain-loss Loss Frame Efficiency");
+	client_print(id, print_console, "^n#N button Gain-loss Loss Frame Efficiency");
 
 	for (new str = 1; str <= g_iStrafes[id]; str++) {
 		new iEffPrecent;
@@ -290,45 +288,48 @@ public show_console(id) {
 			iEffPrecent = 0;
 		}
 
-		client_print(id, print_console, "%2d.  %s  %4.1f  %4.1f  %d  %3d%", str, g_szStrButtonsName[g_iStrButtonsInfo[id][str]], g_eStrafeStats[id][str][st_flSpeed], g_eStrafeStats[id][str][st_flSpeedFail], g_eStrafeStats[id][str][st_iFrame], iEffPrecent);
+		if (g_pCvar[c_iConsoleBug])
+			client_print(id, print_console, "^n%2d.  %s  %4.1f  %4.1f  %d  %3d%", str, g_szStrButtonsName[g_iStrButtonsInfo[id][str]], g_eStrafeStats[id][str][st_flSpeed], g_eStrafeStats[id][str][st_flSpeedFail], g_eStrafeStats[id][str][st_iFrame], iEffPrecent);
+		else
+			client_print(id, print_console, "%2d.  %s  %4.1f  %4.1f  %d  %3d%", str, g_szStrButtonsName[g_iStrButtonsInfo[id][str]], g_eStrafeStats[id][str][st_flSpeed], g_eStrafeStats[id][str][st_flSpeedFail], g_eStrafeStats[id][str][st_iFrame], iEffPrecent);
 	}
 
-	client_print(id, print_console, "");
-	client_print(id, print_console, "Total gain-loss: %4.1f / Efficiency: %d%%", g_flStrGain[id], g_iStrAllEff[id]);
+	client_print(id, print_console, "^nTotal gain-loss: %4.1f / Efficiency: %d%%", g_flStrGain[id], g_iStrAllEff[id]);
 
 	if (g_eWhichJump[id] == jt_LadderJump && g_eStrafeStats[id][0][st_flSpeed] != 0) {
-		client_print(id, print_console, "");
-		client_print(id, print_console, "Turn speed: %.f", g_eStrafeStats[id][0][st_flSpeed]);
+		client_print(id, print_console, "^nTurn speed: %.f", g_eStrafeStats[id][0][st_flSpeed]);
 	} else if (g_eWhichJump[id] == jt_Multi_CountJump || g_eWhichJump[id] == jt_Multi_StandUPCountJump) {
-		client_print(id, print_console, "");
-		client_print(id, print_console, "Pre duck: %.f", g_eDuckData[id][1][DUCK_PRE]);
-		for (new duck = 2; duck <= g_iDucks[id]; duck++)
-			client_print(id, print_console, "Pre dd#%d: %.f, FOG(%d)", duck - 1, g_eDuckData[id][duck][DUCK_PRE], g_eDuckData[id][duck][DUCK_FOG]);
-		client_print(id, print_console, "Pre jump: %.f, FOG(%d)", g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eJumpData[id][g_iJumps[id]][JUMP_FOG]);
+		client_print(id, print_console, "^nPre duck: %.f", g_eDuckData[id][1][DUCK_PRE]);
+		for (new duck = 2; duck <= g_iDucks[id]; duck++) {
+			if (g_pCvar[c_iConsoleBug])
+				client_print(id, print_console, "^nPre dd#%d: %.f, FOG(%d)", duck - 1, g_eDuckData[id][duck][DUCK_PRE], g_eDuckData[id][duck][DUCK_FOG]);
+			else
+				client_print(id, print_console, "Pre dd#%d: %.f, FOG(%d)", duck - 1, g_eDuckData[id][duck][DUCK_PRE], g_eDuckData[id][duck][DUCK_FOG]);
+		}
+
+		if (g_pCvar[c_iConsoleBug])
+			client_print(id, print_console, "^nPre jump: %.f, FOG(%d)", g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eJumpData[id][g_iJumps[id]][JUMP_FOG]);
+		else
+			client_print(id, print_console, "Pre jump: %.f, FOG(%d)", g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eJumpData[id][g_iJumps[id]][JUMP_FOG]);
+
 	}
 	
 	if (g_isTouched[id]) {
-		client_print(id, print_console, "");
-		client_print(id, print_console, "Probably touched something");
+		client_print(id, print_console, "^nProbably touched something");
 	}
 	if (!g_eFailJump[id] && g_eWhichJump[id] != jt_LadderJump && g_eJumpstats[id][js_iJumpBlock] < 290.0 && g_eJumpstats[id][js_iJumpBlock] > 200.0 && g_eJumpstats[id][js_flJof] < 100.0 && g_eJumpstats[id][js_flJof] != 0.0 && (g_eJumpstats[id][js_iJumpBlock] + g_eJumpstats[id][js_flJof]) < g_eJumpstats[id][js_flDistance]) {
-		client_print(id, print_console, "");
 		if ((g_eJumpstats[id][js_iJumpBlock] + g_eJumpstats[id][js_flLanding] + g_eJumpstats[id][js_flJof]) > (g_eJumpstats[id][js_flDistance] + 10.0) || g_eJumpstats[id][js_flLanding] <= 0.0)
-			client_print(id, print_console, "Block: %d / Jumpoff: %.f", g_eJumpstats[id][js_iJumpBlock], g_eJumpstats[id][js_flJof]);
+			client_print(id, print_console, "^nBlock: %d / Jumpoff: %.f", g_eJumpstats[id][js_iJumpBlock], g_eJumpstats[id][js_flJof]);
 		else
-			client_print(id, print_console, "Block: %d / Jumpoff: %.f / Landing: %.f", g_eJumpstats[id][js_iJumpBlock], g_eJumpstats[id][js_flJof], g_eJumpstats[id][js_flLanding]);
+			client_print(id, print_console, "^nBlock: %d / Jumpoff: %.f / Landing: %.f", g_eJumpstats[id][js_iJumpBlock], g_eJumpstats[id][js_flJof], g_eJumpstats[id][js_flLanding]);
 	} else if (g_eFailJump[id] && g_eWhichJump[id] != jt_LadderJump && g_eJumpstats[id][js_iJumpBlock] < 290.0 && g_eJumpstats[id][js_iJumpBlock] > 200.0 && g_eJumpstats[id][js_flJof] < 100.0 && g_eJumpstats[id][js_flJof] != 0.0 && (g_eJumpstats[id][js_iJumpBlock] + g_eJumpstats[id][js_flJof]) < g_eJumpstats[id][js_flDistance]) {
-		client_print(id, print_console, "");
-		client_print(id, print_console, "Fail Block: %d / Jumpoff: %.f", g_eJumpstats[id][js_iJumpBlock], g_eJumpstats[id][js_flJof]);
+		client_print(id, print_console, "^nFail Block: %d / Jumpoff: %.f", g_eJumpstats[id][js_iJumpBlock], g_eJumpstats[id][js_flJof]);
 	} else if (g_eFailJump[id] && g_eWhichJump[id] != jt_LadderJump && g_eJumpstats[id][js_flJof] < 100.0 && g_eJumpstats[id][js_flJof] != 0.0 && g_eJumpstats[id][js_iJumpBlock] < 290.0 && g_eJumpstats[id][js_iJumpBlock] > 200.0) {
-		client_print(id, print_console, "");
-		client_print(id, print_console, "Fail Block: %d / Jumpoff: %.f", g_eJumpstats[id][js_iJumpBlock], g_eJumpstats[id][js_flJof]);
+		client_print(id, print_console, "^nFail Block: %d / Jumpoff: %.f", g_eJumpstats[id][js_iJumpBlock], g_eJumpstats[id][js_flJof]);
 	} else if (g_eFailJump[id] && g_eWhichJump[id] != jt_LadderJump && g_eJumpstats[id][js_flJof] < 100.0 && g_eJumpstats[id][js_flJof] != 0.0) {
-		client_print(id, print_console, "");
-		client_print(id, print_console, "Fail Jumpoff: %.f", g_eJumpstats[id][js_flJof]);
+		client_print(id, print_console, "^nFail Jumpoff: %.f", g_eJumpstats[id][js_flJof]);
 	} else if (!g_eFailJump[id] && g_eWhichJump[id] != jt_LadderJump && g_eJumpstats[id][js_flJof] < 100.0 && g_eJumpstats[id][js_flJof] != 0.0) {
-		client_print(id, print_console, "");
-		client_print(id, print_console, "Jumpoff: %.f", g_eJumpstats[id][js_flJof]);
+		client_print(id, print_console, "^nJumpoff: %.f", g_eJumpstats[id][js_flJof]);
 	}
 }
 

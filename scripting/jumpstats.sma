@@ -1,14 +1,14 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "v1.0.4", "WessTorn");
+	register_plugin("HNS JumpStats", "v1.0.5", "WessTorn");
 
 	init_cvars();
 	init_cmds();
 
 	RegisterHookChain(RG_CBasePlayer_Spawn, "rgPlayerSpawn", true);
 	RegisterHookChain(RG_PM_Move, "rgPM_Move", true);
-	RegisterHookChain(RG_PM_AirMove, "rgPM_AirMove", true);
+	RegisterHookChain(RG_PM_AirMove, "rgPM_AirMove");
 
 	g_hudStrafe = CreateHudSyncObj();
 	g_hudStats = CreateHudSyncObj();
@@ -135,9 +135,6 @@ public rgPM_Move(id) {
 					// ФАЛЛ
 				}
 			}
-		} else {
-			if (g_eWhichJump[id] != jt_Not)
-				g_isTouched[id] = get_pmove(pm_numtouch) ? true : g_isTouched[id];
 		}
 
 		g_iFog[id] = 0;
@@ -168,6 +165,8 @@ public rgPM_AirMove(id) {
 		reset_stats(id);
 		return HC_CONTINUE;
 	}
+
+	g_isTouched[id] = get_pmove(pm_numtouch) ? true : g_isTouched[id];	
 
 	if (g_eWhichJump[id] == jt_LongJump) {
 		detect_hj(id, g_flOrigin[id], g_flFirstJump[id][2]);

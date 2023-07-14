@@ -106,6 +106,7 @@ FOG (frames on the ground) - in a nutshell, this is the number of frames (frames
 | js_hud_stats | 2 | HUD channel of basic statistics |
 | js_hud_strafe | 3 | HUD channel of strafe |
 | js_hud_pre | 1 | HUD channel pre |
+| js_console_fix | 0 | Fix console information if you have no spaces, set to `1` |
 
 ## Thank you ##
 
