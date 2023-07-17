@@ -1,7 +1,7 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "v1.0.6", "WessTorn");
+	register_plugin("HNS JumpStats", "v1.0.7", "WessTorn");
 
 	init_cvars();
 	init_cmds();
