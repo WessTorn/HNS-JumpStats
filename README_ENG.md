@@ -90,10 +90,11 @@ FOG (frames on the ground) - in a nutshell, this is the number of frames (frames
 | js_enable_chat | 1 | `1` - On/ `0` Disable information about jumping in chats |
 | js_stats_red | 0 | HUD color of the main statistics RGB (red) |
 | js_stats_green | 200 | HUD color of the main statistics RGB (green) |
-| js_stats_blue | 60 | HUD color of the main statistics RGB (blue)
-| js_failstats_red | 200 | HUD color of the main statistics RGB (red)
-| js_failstats_green | 10 | HUD color of the main statistics when fail RGB (green)
-| js_failstats_blue | 50 | The color of the main statistics HUD when RGB fails (blue)
+| js_stats_blue | 60 | HUD color of the main statistics RGB (blue) |
+| js_enable_sound | 1 | `1` - On/ `0` Off Sound on good jumps |
+| js_failstats_red | 200 | HUD color of the main statistics RGB (red) |
+| js_failstats_green | 10 | HUD color of the main statistics when fail RGB (green) |
+| js_failstats_blue | 50 | The color of the main statistics HUD when RGB fails (blue) |
 | js_stats_x | -1.0 | location of HUD statistics X
 | js_stats_y | 0.7 | location of HUD Y statistics |
 | js_strafe_x | 0.7 | HUD X strafe location
@@ -108,7 +109,11 @@ FOG (frames on the ground) - in a nutshell, this is the number of frames (frames
 | js_hud_pre | 1 | HUD channel pre |
 | js_console_fix | 0 | Fix console information if you have no spaces, set to `1` |
 
-## Thank you ##
+## Sounds
+
+Customize sounds, path to sound files in file: `scripting/include/jumpstats/global.inc` (g_szSounds)
+
+## Thank you
 
 [borjomi](https://forums.alliedmods.net/showthread.php?t=141586) - Hopefully alive, using uq_jumpstats algorithms
 

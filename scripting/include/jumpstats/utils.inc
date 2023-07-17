@@ -82,10 +82,6 @@ stock detect_hj(id, Float:flOrigin[3], Float:VerOrigin) {
 	}
 }
 
-enum _:ChatDist {
-	good = 0, pro, holy, leet, god
-};
-
 public get_colorchat_by_distance(id, aDistance[ChatDist], JumpType:iJumpType) {
 	new bool:isSotka = bool:(get_movevar(mv_airaccelerate) > 10.0);
 
@@ -96,11 +92,8 @@ public get_colorchat_by_distance(id, aDistance[ChatDist], JumpType:iJumpType) {
 		aDistance[pro] = isSotka ? 255 : 245;
 		aDistance[good] = isSotka ? 250 : 240;
 
-
-
 		return PLUGIN_HANDLED;
 	}
-
 
 	switch (iJumpType) {
 		case jt_LongJump, jt_HighJump: {

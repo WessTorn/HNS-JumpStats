@@ -2,6 +2,18 @@
 #define NDUCKS 100
 #define NJUMPS 100
 
+enum _:ChatDist {
+	good = 0, pro, holy, leet, god
+};
+
+new const g_szSounds[ChatDist][] = {
+    "jumpstats/impressive.wav",
+    "jumpstats/wickedsick.wav",
+	"jumpstats/luche.wav",
+	"jumpstats/ne_very.wav",
+	"jumpstats/vlastb.wav"
+}
+
 enum JumpType {
 	jt_LongJump = 0,
 	jt_HighJump = 1,

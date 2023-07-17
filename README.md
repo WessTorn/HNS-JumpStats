@@ -79,6 +79,7 @@ FOG (frames on the ground) - в двух словах, это кол-во frame 
 | showspeed / speed | Показать/скрыть скорость (HUD) |
 | showpre / pre | Показать/скрыть престрейфы (HUD) |
 | jumpoff / jof | Показать/скрыть jof (HUD) |
+| sound / snd | On/Off sounds for good jumps |
 
 ## Квары
 
@@ -90,6 +91,7 @@ FOG (frames on the ground) - в двух словах, это кол-во frame 
 | js_enable_prespeed | 1 | `1` - Вкл/ `0` Откл HUD Скорости, пре и jof |
 | js_enable_console | 1 | `1` - Вкл/ `0` Откл Информацию о прыжках в консоле |
 | js_enable_chat | 1 | `1` - Вкл/ `0` Откл Информацию о прыжках в чатах |
+| js_enable_sound | 1 | `1` - Вкл/ `0` Откл Звук при хороших прыжках |
 | js_stats_red | 0 | Цвет HUD основной статистики RGB (красный) |
 | js_stats_green | 200 | Цвет HUD основной статистики RGB (зеленый) |
 | js_stats_blue | 60 | Цвет HUD основной статистики RGB (синий) |
@@ -109,6 +111,10 @@ FOG (frames on the ground) - в двух словах, это кол-во frame 
 | js_hud_strafe | 3 | HUD канал стрейфов |
 | js_hud_pre | 1 | HUD канал пре |
 | js_console_fix | 0 | Фикс информации в консоле, если у вас нет пробелов, установите значение `1` |
+
+## Звуки
+
+Настроить звуки, путь к звуковым файлам в файле: `scripting/include/jumpstats/global.inc` (g_szSounds)
 
 ## Спасибки
 

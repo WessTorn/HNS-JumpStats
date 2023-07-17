@@ -1,7 +1,7 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "v1.0.5", "WessTorn");
+	register_plugin("HNS JumpStats", "v1.0.6", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -13,6 +13,11 @@ public plugin_init() {
 	g_hudStrafe = CreateHudSyncObj();
 	g_hudStats = CreateHudSyncObj();
 	g_hudPreSpeed = CreateHudSyncObj();
+}
+
+public plugin_precache() {
+    for(new i; i < sizeof(g_szSounds); i++)
+        precache_sound(g_szSounds[i]);
 }
 
 public rgPlayerSpawn(id) {
@@ -110,8 +115,6 @@ public rgPM_Move(id) {
 		if (g_isOldGround[id]) {
 			new bool:isDuck = !g_bInDuck[id] && !(g_iPrevButtons[id] & IN_JUMP) && g_iOldButtons[id] & IN_DUCK;
 			new bool:isJump = !isDuck && g_iPrevButtons[id] & IN_JUMP && !(g_iOldButtons[id] & IN_JUMP);
-
-			reset_strafes(id);
 
 			if (g_bPrevLadder[id]) {
 				in_ladder(id, isJump);
