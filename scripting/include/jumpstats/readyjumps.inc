@@ -97,7 +97,8 @@ public ready_jumps(id, Float:flEndJump[3]) {
 	arrayset(g_eJumpstats[id], 0, JUMPSTATS);
 	g_eJumpstats[id][js_iJumpBlock] = 1000;
 
-	arrayset(g_ePreStats[id], false, PRESTATS);
+	g_ePreStats[id][ptLadderBhop] = false;
+	g_ePreStats[id][ptSideWays] = false;
 
 	reset_strafes(id);
 
@@ -262,8 +263,11 @@ public show_console(id) {
 		iLen += format(szPreMess[iLen], sizeof szPreMess - iLen, "[bw] ");
 	}
 
-	client_print(id, print_console, "^nHNS JumpStats");
-	
+	if (g_pCvar[c_iConsoleBug])
+		client_print(id, print_console, "^nHNS JumpStats^n");
+	else
+		client_print(id, print_console, "^nHNS JumpStats");
+
 	switch (g_eWhichJump[id]) {
 		case jt_LongJump, jt_HighJump, jt_LadderJump: {
 			client_print(id, print_console, "%s (%s)^nDistance: %.3f unit/s^nEndspeed: %.3f unit/s^nPrestrafe: %.0f^nFrames: %d", g_eNameJumps[g_eWhichJump[id]][info_hud], g_eNameJumps[g_eWhichJump[id]][info_console], g_eJumpstats[id][js_flDistance], g_eJumpstats[id][js_flEndSpeed], g_eJumpData[id][g_iJumps[id]][JUMP_PRE], g_eJumpstats[id][js_iFrames]);
