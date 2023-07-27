@@ -52,12 +52,11 @@ enum _:PRESTATS {
 
 new bool:g_ePreStats[MAX_PLAYERS + 1][PRESTATS];
 
-enum _:buttons_info {
+enum BUTTONS_S {
 	bi_not = 0, bi_W, bi_A, bi_S, bi_D
 };
 
-new g_szStrButtonsName[buttons_info][] = { "err", "W", "A", "S", "D" };
-new g_iStrButtonsInfo[MAX_PLAYERS + 1][NSTRAFES];
+new g_szStrButtonsName[BUTTONS_S][] = { "err", "W", "A", "S", "D" };
 
 enum _:StrafeStats {
 	Float:st_flSpeed,
@@ -65,6 +64,7 @@ enum _:StrafeStats {
 	st_iFrameGood,
 	st_iFrameBad,
 	st_iFrame,
+	BUTTONS_S:st_iButton
 };
 
 new g_eStrafeStats[MAX_PLAYERS + 1][NSTRAFES][StrafeStats];

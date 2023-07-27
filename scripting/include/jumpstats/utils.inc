@@ -39,7 +39,6 @@ stock reset_stats(id) {
 stock reset_strafes(id) {
 	for (new i = 0; i < NSTRAFES; i++) {
 		arrayset(g_eStrafeStats[id][i], 0, StrafeStats);
-		arrayset(g_iStrButtonsInfo[id][i], bi_not, buttons_info);
 	}
 	
 	g_iStrafes[id] = 0;

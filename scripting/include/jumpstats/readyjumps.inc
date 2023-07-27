@@ -137,9 +137,9 @@ public calc_strafe(id) {
 			g_eFailJump[id] = fj_fail;
 		}
 
-		if (g_iStrButtonsInfo[id][str] == 2 || g_iStrButtonsInfo[id][str] == 4)
+		if (g_eStrafeStats[id][str][st_iButton] == bi_A || g_eStrafeStats[id][str][st_iButton] == bi_D)
 			iSumAD++;
-		if (g_iStrButtonsInfo[id][str] == 1 || g_iStrButtonsInfo[id][str] == 3)
+		if (g_eStrafeStats[id][str][st_iButton] == bi_W || g_eStrafeStats[id][str][st_iButton] == bi_S)
 			iSumWS++;
 	}
 
@@ -164,7 +164,7 @@ public show_strafe_hud(id) {
 			iEffPrecent = 0;
 		}
 
-		iLen += format(szStrMess[iLen], sizeof szStrMess - iLen, "^t%s  %4.1f  %4.1f  %d  %d%%%%^n", g_szStrButtonsName[g_iStrButtonsInfo[id][str]], g_eStrafeStats[id][str][st_flSpeed], g_eStrafeStats[id][str][st_flSpeedFail], g_eStrafeStats[id][str][st_iFrame], iEffPrecent);
+		iLen += format(szStrMess[iLen], sizeof szStrMess - iLen, "^t%s  %4.1f  %4.1f  %d  %d%%%%^n", g_szStrButtonsName[g_eStrafeStats[id][str][st_iButton]], g_eStrafeStats[id][str][st_flSpeed], g_eStrafeStats[id][str][st_flSpeedFail], g_eStrafeStats[id][str][st_iFrame], iEffPrecent);
 	}
 
 	if (g_iStrafes[id] != 0) {
@@ -298,9 +298,9 @@ public show_console(id) {
 		}
 
 		if (g_pCvar[c_iConsoleBug])
-			client_print(id, print_console, "^n%2d.  %s  %4.1f  %4.1f  %d  %3d%", str, g_szStrButtonsName[g_iStrButtonsInfo[id][str]], g_eStrafeStats[id][str][st_flSpeed], g_eStrafeStats[id][str][st_flSpeedFail], g_eStrafeStats[id][str][st_iFrame], iEffPrecent);
+			client_print(id, print_console, "^n%2d.  %s  %4.1f  %4.1f  %d  %3d%", str, g_szStrButtonsName[g_eStrafeStats[id][str][st_iButton]], g_eStrafeStats[id][str][st_flSpeed], g_eStrafeStats[id][str][st_flSpeedFail], g_eStrafeStats[id][str][st_iFrame], iEffPrecent);
 		else
-			client_print(id, print_console, "%2d.  %s  %4.1f  %4.1f  %d  %3d%", str, g_szStrButtonsName[g_iStrButtonsInfo[id][str]], g_eStrafeStats[id][str][st_flSpeed], g_eStrafeStats[id][str][st_flSpeedFail], g_eStrafeStats[id][str][st_iFrame], iEffPrecent);
+			client_print(id, print_console, "%2d.  %s  %4.1f  %4.1f  %d  %3d%", str, g_szStrButtonsName[g_eStrafeStats[id][str][st_iButton]], g_eStrafeStats[id][str][st_flSpeed], g_eStrafeStats[id][str][st_flSpeedFail], g_eStrafeStats[id][str][st_iFrame], iEffPrecent);
 	}
 
 	client_print(id, print_console, "^nTotal gain-loss: %4.1f / Efficiency: %d%%", g_flStrGain[id], g_iStrAllEff[id]);

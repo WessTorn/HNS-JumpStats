@@ -1,7 +1,7 @@
 #include <jumpstats/index>
 
 public plugin_init() {
-	register_plugin("HNS JumpStats", "v1.0.8", "WessTorn");
+	register_plugin("HNS JumpStats", "v1.0.9", "WessTorn");
 
 	init_cvars();
 	init_cmds();
@@ -193,16 +193,16 @@ public rgPM_AirMove(id) {
 
 	if (iButtons & IN_MOVELEFT && !(g_iOldStrButtons[id] & IN_MOVELEFT) && !(iButtons & (IN_MOVERIGHT|IN_BACK|IN_FORWARD)) && (isTiring)) {
 		g_iStrafes[id]++;
-		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_A;
+		g_eStrafeStats[id][g_iStrafes[id]][st_iButton] = bi_A;
 	} else if (iButtons & IN_MOVERIGHT && !(g_iOldStrButtons[id] & IN_MOVERIGHT) && !(iButtons & (IN_MOVELEFT|IN_BACK|IN_FORWARD)) && (isTiring)) {
 		g_iStrafes[id]++;
-		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_D;
+		g_eStrafeStats[id][g_iStrafes[id]][st_iButton] = bi_D;
 	} else if (iButtons & IN_BACK && !(g_iOldStrButtons[id] & IN_BACK) && !(iButtons & (IN_MOVELEFT|IN_MOVERIGHT|IN_FORWARD)) && (isTiring)) {
 		g_iStrafes[id]++;
-		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_S;
+		g_eStrafeStats[id][g_iStrafes[id]][st_iButton] = bi_S;
 	} else if (iButtons & IN_FORWARD && !(g_iOldStrButtons[id] & IN_FORWARD) && !(iButtons & (IN_MOVELEFT|IN_MOVERIGHT|IN_BACK)) && (isTiring)) {
 		g_iStrafes[id]++;
-		g_iStrButtonsInfo[id][g_iStrafes[id]] = bi_W;
+		g_eStrafeStats[id][g_iStrafes[id]][st_iButton] = bi_W;
 	}
 
 	if (iButtons & (IN_MOVERIGHT|IN_MOVELEFT|IN_FORWARD|IN_BACK)) {
